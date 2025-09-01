@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request On-Site Support | Mental Health Support System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #003366;
+            --secondary-blue: #1b2735;
+            --accent-blue: #0056b3;
+            --text-light: #ffffff;
+            --text-dark: #333333;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --button-gradient: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--button-gradient);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 1.1em;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(-5px);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            transform: translateY(20px);
+            opacity: 0;
+            animation: fadeInUp 0.8s forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #003366;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="tel"]:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #003366;
+            outline: none;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #4776E6, #8E54E9);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(71, 118, 230, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(71, 118, 230, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #8E54E9, #4776E6);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        button:hover::after {
+            opacity: 1;
+        }
+
+        button span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .urgency-options {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .urgency-option {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .urgency-option.selected {
+            background-color: #003366;
+            color: white;
+            border-color: #003366;
+        }
+
+        .success-message {
+            display: none;
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="index.html" class="back-button">← Back to Home</a>
+        <h1>Request On-Site Support</h1>
+        <p>Let us bring mental health support to your location</p>
+    </header>
+
+    <div class="container" data-aos="fade-up">
+        <form id="supportRequestForm" onsubmit="return handleSubmit(event)">
+            <!-- Institution Details -->
+            <div class="form-group">
+                <label for="institutionName">Institution Name*</label>
+                <input type="text" id="institutionName" required placeholder="Enter your college/institution name">
+            </div>
+
+            <div class="form-group">
+                <label for="department">Department</label>
+                <input type="text" id="department" placeholder="e.g., Engineering, Arts, Science">
+            </div>
+
+            <!-- Contact Person Details -->
+            <div class="form-group">
+                <label for="contactName">Contact Person Name*</label>
+                <input type="text" id="contactName" required placeholder="Enter your full name">
+            </div>
+
+            <div class="form-group">
+                <label for="contactRole">Your Role*</label>
+                <select id="contactRole" required>
+                    <option value="">Select your role</option>
+                    <option value="faculty">Faculty Member</option>
+                    <option value="admin">Administrator</option>
+                    <option value="counselor">College Counselor</option>
+                    <option value="student">Student Representative</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="form-group">
+                <label for="email">Email Address*</label>
+                <input type="email" id="email" required placeholder="Enter your email address">
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Phone Number*</label>
+                <input type="tel" id="phone" required placeholder="Enter your contact number">
+            </div>
+
+            <!-- Location Details -->
+            <div class="form-group">
+                <label for="address">Institution Address*</label>
+                <textarea id="address" rows="3" required placeholder="Enter complete address with landmarks"></textarea>
+            </div>
+
+            <!-- Support Requirements -->
+            <div class="form-group">
+                <label>Type of Support Needed* (Select all that apply)</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="counseling">
+                        <label for="counseling">One-on-One Counseling</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="workshop">
+                        <label for="workshop">Mental Health Workshop</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="crisis">
+                        <label for="crisis">Crisis Intervention</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="awareness">
+                        <label for="awareness">Awareness Program</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="training">
+                        <label for="training">Faculty Training</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="other">
+                        <label for="other">Other Support</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Urgency Level -->
+            <div class="form-group">
+                <label>Urgency Level*</label>
+                <div class="urgency-options">
+                    <div class="urgency-option" onclick="selectUrgency('standard')">
+                        Standard<br>(Within 2 weeks)
+                    </div>
+                    <div class="urgency-option" onclick="selectUrgency('priority')">
+                        Priority<br>(Within 1 week)
+                    </div>
+                    <div class="urgency-option" onclick="selectUrgency('urgent')">
+                        Urgent<br>(Within 48 hours)
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Information -->
+            <div class="form-group">
+                <label for="additionalInfo">Additional Information</label>
+                <textarea id="additionalInfo" rows="4" placeholder="Please provide any additional details about your requirements or specific concerns"></textarea>
+            </div>
+
+            <button type="submit"><span>Submit Request <i class="fas fa-arrow-right"></i></span></button>
+        </form>
+
+        <div id="successMessage" class="success-message">
+            Thank you for your request! We will contact you within 24 hours to discuss the details and arrange the support.
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            once: true
+        });
+
+        function selectUrgency(level) {
+            // Remove selected class from all options
+            document.querySelectorAll('.urgency-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked option
+            event.target.closest('.urgency-option').classList.add('selected');
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+            
+            // Basic form validation
+            const required = ['institutionName', 'contactName', 'email', 'phone', 'address'];
+            let isValid = true;
+
+            required.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (!field.value.trim()) {
+                    field.style.borderColor = 'red';
+                    isValid = false;
+                } else {
+                    field.style.borderColor = '#e0e0e0';
+                }
+            });
+
+            // Check if at least one support type is selected
+            const supportTypes = document.querySelectorAll('.checkbox-group input[type="checkbox"]');
+            let supportSelected = false;
+            supportTypes.forEach(checkbox => {
+                if (checkbox.checked) supportSelected = true;
+            });
+
+            if (!supportSelected) {
+                alert('Please select at least one type of support needed');
+                return false;
+            }
+
+            // Check if urgency level is selected
+            const urgencySelected = document.querySelector('.urgency-option.selected');
+            if (!urgencySelected) {
+                alert('Please select an urgency level');
+                return false;
+            }
+
+            if (isValid) {
+                // Show success message
+                document.getElementById('supportRequestForm').style.display = 'none';
+                document.getElementById('successMessage').style.display = 'block';
+                
+                // In a real application, you would send this data to your server here
+                console.log('Form submitted successfully');
+            }
+
+            return false;
+        }
+    </script>
+</body>
+</html>

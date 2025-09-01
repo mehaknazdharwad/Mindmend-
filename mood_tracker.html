@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindMend - Mood & Progress Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.1/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-color: #003366;
+            --secondary-color: #1b2735;
+            --accent-color: #0056b3;
+            --text-light: #ffffff;
+            --text-dark: #2A2A2A;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --button-gradient: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            --happy-color: #4CAF50;
+            --sad-color: #2196F3;
+            --angry-color: #f44336;
+            --neutral-color: #9E9E9E;
+            --excited-color: #FF9800;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--button-gradient);
+            color: var(--text-light);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .header {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid var(--glass-border);
+            position: relative;
+        }
+
+        .back-button {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            transform: translateY(-50%) scale(1.05);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .mood-input-section {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid var(--glass-border);
+            text-align: center;
+        }
+
+        .mood-question {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+
+        .mood-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .mood-button {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid transparent;
+            border-radius: 15px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            min-width: 100px;
+        }
+
+        .mood-button:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .mood-button.selected {
+            border-color: var(--accent-color);
+            background: rgba(0, 86, 179, 0.2);
+        }
+
+        .mood-emoji {
+            font-size: 2.5em;
+        }
+
+        .mood-label {
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        .mood-intensity {
+            margin-top: 20px;
+        }
+
+        .intensity-slider {
+            width: 100%;
+            max-width: 400px;
+            margin: 20px auto;
+        }
+
+        .intensity-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        .journal-section {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .journal-textarea {
+            width: 100%;
+            min-height: 120px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 20px;
+            color: var(--text-light);
+            font-family: 'Poppins', sans-serif;
+            font-size: 1em;
+            resize: vertical;
+            outline: none;
+        }
+
+        .journal-textarea::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .submit-button {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .submit-button:hover {
+            transform: scale(1.05);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .charts-section {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-bottom: 30px;
+        }
+
+        .chart-container:last-child {
+            margin-bottom: 0;
+        }
+
+        .insights-section {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .insight-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .insight-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .insight-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .insight-content {
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .history-section {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-mood {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .history-emoji {
+            font-size: 1.5em;
+        }
+
+        .history-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .history-date {
+            font-size: 0.9em;
+            opacity: 0.7;
+        }
+
+        .history-intensity {
+            font-size: 0.8em;
+            opacity: 0.6;
+        }
+
+        .success-message {
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid #4CAF50;
+            color: #c8e6c9;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .mood-buttons {
+                gap: 15px;
+            }
+            
+            .mood-button {
+                min-width: 80px;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="index.html" class="back-button">← Back to MindMend</a>
+        <h1>Mood & Progress Tracker</h1>
+        <p>Track your emotional journey and discover patterns</p>
+    </div>
+
+    <div class="container">
+        <div class="mood-input-section" data-aos="fade-up">
+            <h2 class="mood-question">How are you feeling right now?</h2>
+            
+            <div class="mood-buttons">
+                <div class="mood-button" data-mood="excited" data-value="5">
+                    <div class="mood-emoji">😊</div>
+                    <div class="mood-label">Excited</div>
+                </div>
+                <div class="mood-button" data-mood="happy" data-value="4">
+                    <div class="mood-emoji">🙂</div>
+                    <div class="mood-label">Happy</div>
+                </div>
+                <div class="mood-button" data-mood="neutral" data-value="3">
+                    <div class="mood-emoji">😐</div>
+                    <div class="mood-label">Neutral</div>
+                </div>
+                <div class="mood-button" data-mood="sad" data-value="2">
+                    <div class="mood-emoji">😔</div>
+                    <div class="mood-label">Sad</div>
+                </div>
+                <div class="mood-button" data-mood="angry" data-value="1">
+                    <div class="mood-emoji">😠</div>
+                    <div class="mood-label">Angry</div>
+                </div>
+            </div>
+
+            <div class="mood-intensity">
+                <label>Intensity Level:</label>
+                <input type="range" class="intensity-slider" id="intensitySlider" min="1" max="10" value="5">
+                <div class="intensity-labels">
+                    <span>Low</span>
+                    <span>High</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="journal-section" data-aos="fade-up">
+            <h3>📝 Journal Your Thoughts (Optional)</h3>
+            <textarea class="journal-textarea" id="journalText" placeholder="What's on your mind? What happened today? How are you coping?"></textarea>
+            <button class="submit-button" onclick="submitMoodEntry()">Save Entry</button>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="charts-section" data-aos="fade-right">
+                <h3>📊 Mood Trends</h3>
+                <div class="chart-container">
+                    <canvas id="moodChart"></canvas>
+                </div>
+                <h3>📈 Weekly Progress</h3>
+                <div class="chart-container">
+                    <canvas id="progressChart"></canvas>
+                </div>
+            </div>
+
+            <div class="insights-section" data-aos="fade-left">
+                <h3>💡 Wellness Insights</h3>
+                <div class="insight-card">
+                    <div class="insight-title">
+                        <span>📈</span>
+                        <span>Trend Analysis</span>
+                    </div>
+                    <div class="insight-content" id="trendInsight">
+                        Your mood has been improving over the past week. Keep up the great work!
+                    </div>
+                </div>
+                <div class="insight-card">
+                    <div class="insight-title">
+                        <span>🎯</span>
+                        <span>Pattern Recognition</span>
+                    </div>
+                    <div class="insight-content" id="patternInsight">
+                        You tend to feel better in the mornings. Consider starting your day with positive activities.
+                    </div>
+                </div>
+                <div class="insight-card">
+                    <div class="insight-title">
+                        <span>💪</span>
+                        <span>Wellness Score</span>
+                    </div>
+                    <div class="insight-content" id="wellnessScore">
+                        Current Wellness Score: <strong>8.2/10</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="history-section" data-aos="fade-up">
+            <h3>📅 Recent Entries</h3>
+            <div id="moodHistory">
+                <!-- History items will be populated here -->
+            </div>
+        </div>
+
+        <div class="success-message" id="successMessage">
+            Mood entry saved successfully! +25 MindMend Points
+        </div>
+    </div>
+
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 1000,
+            once: true
+        });
+
+        // Mood tracking variables
+        let selectedMood = null;
+        let moodHistory = [];
+        let moodChart = null;
+        let progressChart = null;
+
+        // Sample data for demonstration
+        const sampleData = [
+            { date: '2024-01-15', mood: 'happy', intensity: 7, journal: 'Had a great day at work!' },
+            { date: '2024-01-16', mood: 'neutral', intensity: 5, journal: 'Regular day, nothing special.' },
+            { date: '2024-01-17', mood: 'excited', intensity: 8, journal: 'Met with old friends, felt amazing!' },
+            { date: '2024-01-18', mood: 'sad', intensity: 3, journal: 'Feeling a bit down today.' },
+            { date: '2024-01-19', mood: 'happy', intensity: 6, journal: 'Good workout session, feeling energized.' },
+            { date: '2024-01-20', mood: 'neutral', intensity: 4, journal: 'Quiet day at home.' },
+            { date: '2024-01-21', mood: 'excited', intensity: 9, journal: 'Weekend plans are looking great!' }
+        ];
+
+        // Initialize with sample data
+        moodHistory = [...sampleData];
+
+        // Mood button selection
+        document.querySelectorAll('.mood-button').forEach(button => {
+            button.addEventListener('click', () => {
+                document.querySelectorAll('.mood-button').forEach(btn => btn.classList.remove('selected'));
+                button.classList.add('selected');
+                selectedMood = {
+                    mood: button.dataset.mood,
+                    value: parseInt(button.dataset.value)
+                };
+            });
+        });
+
+        // Submit mood entry
+        function submitMoodEntry() {
+            if (!selectedMood) {
+                alert('Please select a mood first!');
+                return;
+            }
+
+            const intensity = document.getElementById('intensitySlider').value;
+            const journal = document.getElementById('journalText').value;
+            const today = new Date().toISOString().split('T')[0];
+
+            const entry = {
+                date: today,
+                mood: selectedMood.mood,
+                intensity: parseInt(intensity),
+                journal: journal
+            };
+
+            moodHistory.unshift(entry);
+            updateCharts();
+            updateHistory();
+            updateInsights();
+            showSuccessMessage();
+
+            // Reset form
+            document.querySelectorAll('.mood-button').forEach(btn => btn.classList.remove('selected'));
+            document.getElementById('intensitySlider').value = 5;
+            document.getElementById('journalText').value = '';
+            selectedMood = null;
+        }
+
+        // Show success message
+        function showSuccessMessage() {
+            const successMsg = document.getElementById('successMessage');
+            successMsg.style.display = 'block';
+            setTimeout(() => {
+                successMsg.style.display = 'none';
+            }, 3000);
+        }
+
+        // Update mood history display
+        function updateHistory() {
+            const historyContainer = document.getElementById('moodHistory');
+            const recentEntries = moodHistory.slice(0, 7); // Show last 7 entries
+
+            historyContainer.innerHTML = recentEntries.map(entry => {
+                const moodEmojis = {
+                    'excited': '😊',
+                    'happy': '🙂',
+                    'neutral': '😐',
+                    'sad': '😔',
+                    'angry': '😠'
+                };
+
+                const date = new Date(entry.date).toLocaleDateString();
+                return `
+                    <div class="history-item">
+                        <div class="history-mood">
+                            <div class="history-emoji">${moodEmojis[entry.mood]}</div>
+                            <div class="history-details">
+                                <div>${entry.mood.charAt(0).toUpperCase() + entry.mood.slice(1)}</div>
+                                <div class="history-date">${date}</div>
+                            </div>
+                        </div>
+                        <div class="history-intensity">Intensity: ${entry.intensity}/10</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Initialize charts
+        function initializeCharts() {
+            const moodCtx = document.getElementById('moodChart').getContext('2d');
+            const progressCtx = document.getElementById('progressChart').getContext('2d');
+
+            // Mood Chart
+            moodChart = new Chart(moodCtx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Mood Level',
+                        data: [],
+                        borderColor: '#4CAF50',
+                        backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 5,
+                            ticks: {
+                                color: '#ffffff'
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: '#ffffff'
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#ffffff'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Progress Chart
+            progressChart = new Chart(progressCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        label: 'Wellness Score',
+                        data: [7, 8, 6, 9, 7, 8, 9],
+                        backgroundColor: 'rgba(0, 86, 179, 0.8)',
+                        borderColor: '#0056b3',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 10,
+                            ticks: {
+                                color: '#ffffff'
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: '#ffffff'
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#ffffff'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Update charts with new data
+        function updateCharts() {
+            const recentData = moodHistory.slice(0, 7).reverse();
+            
+            moodChart.data.labels = recentData.map(entry => {
+                const date = new Date(entry.date);
+                return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            });
+            
+            moodChart.data.datasets[0].data = recentData.map(entry => entry.value);
+            moodChart.update();
+
+            // Update progress chart with wellness scores
+            const wellnessScores = recentData.map(entry => {
+                return Math.round((entry.value * entry.intensity) / 5);
+            });
+            
+            progressChart.data.datasets[0].data = wellnessScores;
+            progressChart.update();
+        }
+
+        // Update insights
+        function updateInsights() {
+            const recentEntries = moodHistory.slice(0, 7);
+            const avgMood = recentEntries.reduce((sum, entry) => sum + entry.value, 0) / recentEntries.length;
+            const avgIntensity = recentEntries.reduce((sum, entry) => sum + entry.intensity, 0) / recentEntries.length;
+            
+            const wellnessScore = Math.round((avgMood * avgIntensity) / 5 * 10) / 10;
+            
+            document.getElementById('wellnessScore').innerHTML = 
+                `Current Wellness Score: <strong>${wellnessScore}/10</strong>`;
+
+            // Generate trend insight
+            if (recentEntries.length >= 2) {
+                const firstMood = recentEntries[recentEntries.length - 1].value;
+                const lastMood = recentEntries[0].value;
+                
+                if (lastMood > firstMood) {
+                    document.getElementById('trendInsight').textContent = 
+                        'Your mood has been improving over the past week. Keep up the great work!';
+                } else if (lastMood < firstMood) {
+                    document.getElementById('trendInsight').textContent = 
+                        'Your mood has been declining. Consider reaching out for support or trying some self-care activities.';
+                } else {
+                    document.getElementById('trendInsight').textContent = 
+                        'Your mood has been stable. Consistency is good for mental health!';
+                }
+            }
+        }
+
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeCharts();
+            updateCharts();
+            updateHistory();
+            updateInsights();
+        });
+    </script>
+</body>
+</html>

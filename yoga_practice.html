@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindMend - Mindfulness Zone</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.1/gsap.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #003366;
+            --secondary-color: #1b2735;
+            --accent-color: #0056b3;
+            --text-light: #ffffff;
+            --text-dark: #2A2A2A;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --button-gradient: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            --meditation-color: #4CAF50;
+            --breathing-color: #2196F3;
+            --yoga-color: #FF9800;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--button-gradient);
+            color: var(--text-light);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .header {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid var(--glass-border);
+            position: relative;
+        }
+
+        .back-button {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            transform: translateY(-50%) scale(1.05);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .practice-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .practice-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid var(--glass-border);
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .practice-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .practice-card:hover::before {
+            transform: translateX(100%);
+        }
+
+        .practice-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .practice-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .practice-card:hover .practice-icon {
+            transform: scale(1.2);
+        }
+
+        .practice-title {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            color: var(--text-light);
+        }
+
+        .practice-description {
+            font-size: 1em;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .practice-duration {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .start-button {
+            background: var(--button-gradient);
+            color: var(--text-light);
+            padding: 12px 25px;
+            border-radius: 25px;
+            border: none;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 4px 15px var(--shadow-color);
+        }
+
+        .start-button:hover {
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 0 6px 20px var(--shadow-color);
+        }
+
+        .session-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+            border: 1px solid var(--glass-border);
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 2em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .close-modal:hover {
+            transform: scale(1.2);
+        }
+
+        .session-timer {
+            font-size: 4em;
+            font-weight: 700;
+            margin: 30px 0;
+            color: var(--meditation-color);
+        }
+
+        .breathing-circle {
+            width: 200px;
+            height: 200px;
+            border: 4px solid var(--breathing-color);
+            border-radius: 50%;
+            margin: 30px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            transition: all 0.5s ease;
+            animation: breathe 4s infinite ease-in-out;
+        }
+
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+        }
+
+        .session-controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .control-button {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1em;
+        }
+
+        .control-button:hover {
+            transform: scale(1.05);
+        }
+
+        .control-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--meditation-color);
+            width: 0%;
+            transition: width 1s ease;
+        }
+
+        .guided-sessions {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .session-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .session-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .session-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: var(--accent-color);
+            transform: translateY(-5px);
+        }
+
+        .session-item h4 {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .session-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        .wellness-stats {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: 700;
+            color: var(--meditation-color);
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .practice-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .session-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="index.html" class="back-button">← Back to MindMend</a>
+        <h1>Mindfulness Zone</h1>
+        <p>Find your inner peace through guided practices</p>
+    </div>
+
+    <div class="container">
+        <div class="practice-grid">
+            <div class="practice-card" data-aos="fade-up" onclick="startSession('meditation')">
+                <div class="practice-icon">🧘</div>
+                <h3 class="practice-title">Guided Meditation</h3>
+                <p class="practice-description">Clear your mind and find inner peace with our guided meditation sessions designed for all experience levels.</p>
+                <div class="practice-duration">5-20 minutes</div>
+                <button class="start-button">Start Meditation</button>
+            </div>
+
+            <div class="practice-card" data-aos="fade-up" data-aos-delay="100" onclick="startSession('breathing')">
+                <div class="practice-icon">🫁</div>
+                <h3 class="practice-title">Breathing Exercises</h3>
+                <p class="practice-description">Master your breath to reduce stress and anxiety. Learn various breathing techniques for different situations.</p>
+                <div class="practice-duration">3-10 minutes</div>
+                <button class="start-button">Start Breathing</button>
+            </div>
+
+            <div class="practice-card" data-aos="fade-up" data-aos-delay="200" onclick="startSession('yoga')">
+                <div class="practice-icon">🧘‍♀️</div>
+                <h3 class="practice-title">Gentle Yoga</h3>
+                <p class="practice-description">Connect mind and body with gentle yoga poses. Perfect for beginners and stress relief.</p>
+                <div class="practice-duration">10-30 minutes</div>
+                <button class="start-button">Start Yoga</button>
+            </div>
+
+            <div class="practice-card" data-aos="fade-up" data-aos-delay="300" onclick="startSession('mindfulness')">
+                <div class="practice-icon">🌿</div>
+                <h3 class="practice-title">Mindfulness Walk</h3>
+                <p class="practice-description">Take a mindful journey through nature sounds and guided walking meditation.</p>
+                <div class="practice-duration">15-45 minutes</div>
+                <button class="start-button">Start Walking</button>
+            </div>
+        </div>
+
+        <div class="guided-sessions" data-aos="fade-up">
+            <h2>🎧 Guided Sessions</h2>
+            <div class="session-list">
+                <div class="session-item" onclick="startGuidedSession('stress-relief')">
+                    <h4>😌 Stress Relief Meditation</h4>
+                    <p>Release tension and find calm with this gentle stress-relief session.</p>
+                    <div class="session-meta">
+                        <span>⏱️ 10 minutes</span>
+                        <span>⭐ Beginner</span>
+                    </div>
+                </div>
+
+                <div class="session-item" onclick="startGuidedSession('sleep')">
+                    <h4>😴 Sleep Meditation</h4>
+                    <p>Drift into peaceful sleep with soothing sounds and gentle guidance.</p>
+                    <div class="session-meta">
+                        <span>⏱️ 15 minutes</span>
+                        <span>⭐ All levels</span>
+                    </div>
+                </div>
+
+                <div class="session-item" onclick="startGuidedSession('anxiety')">
+                    <h4>😰 Anxiety Relief</h4>
+                    <p>Calm your anxious mind with proven breathing and mindfulness techniques.</p>
+                    <div class="session-meta">
+                        <span>⏱️ 8 minutes</span>
+                        <span>⭐ Intermediate</span>
+                    </div>
+                </div>
+
+                <div class="session-item" onclick="startGuidedSession('gratitude')">
+                    <h4>🙏 Gratitude Practice</h4>
+                    <p>Cultivate gratitude and positive thinking through mindful reflection.</p>
+                    <div class="session-meta">
+                        <span>⏱️ 12 minutes</span>
+                        <span>⭐ Beginner</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="wellness-stats" data-aos="fade-up">
+            <h2>📊 Your Mindfulness Journey</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalSessions">24</div>
+                    <div class="stat-label">Total Sessions</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalMinutes">180</div>
+                    <div class="stat-label">Minutes Practiced</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="streakDays">7</div>
+                    <div class="stat-label">Day Streak</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="wellnessScore">8.5</div>
+                    <div class="stat-label">Wellness Score</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Session Modal -->
+    <div class="session-modal" id="sessionModal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeSession()">×</button>
+            <h2 id="sessionTitle">Meditation Session</h2>
+            <p id="sessionDescription">Find a comfortable position and close your eyes...</p>
+            
+            <div class="session-timer" id="sessionTimer">10:00</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            
+            <div class="breathing-circle" id="breathingCircle" style="display: none;">
+                <span id="breathingText">Breathe In</span>
+            </div>
+            
+            <div class="session-controls">
+                <button class="control-button" id="pauseButton" onclick="pauseSession()">⏸️ Pause</button>
+                <button class="control-button" id="stopButton" onclick="stopSession()">⏹️ Stop</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 1000,
+            once: true
+        });
+
+        // Session variables
+        let currentSession = null;
+        let sessionTimer = null;
+        let sessionDuration = 0;
+        let sessionType = '';
+        let isPaused = false;
+        let breathingPhase = 'in';
+
+        // Session data
+        const sessions = {
+            meditation: {
+                title: 'Guided Meditation',
+                description: 'Find a comfortable position, close your eyes, and let your mind settle...',
+                duration: 600 // 10 minutes
+            },
+            breathing: {
+                title: 'Breathing Exercise',
+                description: 'Follow the circle to regulate your breath and find calm...',
+                duration: 300 // 5 minutes
+            },
+            yoga: {
+                title: 'Gentle Yoga Session',
+                description: 'Move mindfully through gentle poses to connect body and mind...',
+                duration: 900 // 15 minutes
+            },
+            mindfulness: {
+                title: 'Mindfulness Walk',
+                description: 'Take a virtual mindful walk through peaceful nature sounds...',
+                duration: 1200 // 20 minutes
+            }
+        };
+
+        const guidedSessions = {
+            'stress-relief': {
+                title: 'Stress Relief Meditation',
+                description: 'Release tension from your body and mind with this gentle practice...',
+                duration: 600
+            },
+            'sleep': {
+                title: 'Sleep Meditation',
+                description: 'Drift into peaceful sleep with soothing guidance...',
+                duration: 900
+            },
+            'anxiety': {
+                title: 'Anxiety Relief',
+                description: 'Calm your anxious mind with proven techniques...',
+                duration: 480
+            },
+            'gratitude': {
+                title: 'Gratitude Practice',
+                description: 'Cultivate gratitude and positive thinking...',
+                duration: 720
+            }
+        };
+
+        // Start session
+        function startSession(type) {
+            sessionType = type;
+            const session = sessions[type];
+            sessionDuration = session.duration;
+            
+            document.getElementById('sessionTitle').textContent = session.title;
+            document.getElementById('sessionDescription').textContent = session.description;
+            document.getElementById('sessionTimer').textContent = formatTime(sessionDuration);
+            
+            if (type === 'breathing') {
+                document.getElementById('breathingCircle').style.display = 'flex';
+                startBreathingExercise();
+            } else {
+                document.getElementById('breathingCircle').style.display = 'none';
+            }
+            
+            document.getElementById('sessionModal').style.display = 'flex';
+            startTimer();
+        }
+
+        // Start guided session
+        function startGuidedSession(sessionId) {
+            const session = guidedSessions[sessionId];
+            sessionType = sessionId;
+            sessionDuration = session.duration;
+            
+            document.getElementById('sessionTitle').textContent = session.title;
+            document.getElementById('sessionDescription').textContent = session.description;
+            document.getElementById('sessionTimer').textContent = formatTime(sessionDuration);
+            document.getElementById('breathingCircle').style.display = 'none';
+            
+            document.getElementById('sessionModal').style.display = 'flex';
+            startTimer();
+        }
+
+        // Start timer
+        function startTimer() {
+            let timeLeft = sessionDuration;
+            isPaused = false;
+            
+            sessionTimer = setInterval(() => {
+                if (!isPaused) {
+                    timeLeft--;
+                    document.getElementById('sessionTimer').textContent = formatTime(timeLeft);
+                    
+                    const progress = ((sessionDuration - timeLeft) / sessionDuration) * 100;
+                    document.getElementById('progressFill').style.width = progress + '%';
+                    
+                    if (timeLeft <= 0) {
+                        completeSession();
+                    }
+                }
+            }, 1000);
+        }
+
+        // Start breathing exercise
+        function startBreathingExercise() {
+            let breathCount = 0;
+            const totalBreaths = Math.floor(sessionDuration / 4); // 4 seconds per breath cycle
+            
+            const breathingInterval = setInterval(() => {
+                if (isPaused) return;
+                
+                breathCount++;
+                if (breathCount > totalBreaths) {
+                    clearInterval(breathingInterval);
+                    return;
+                }
+                
+                breathingPhase = breathingPhase === 'in' ? 'out' : 'in';
+                document.getElementById('breathingText').textContent = 
+                    breathingPhase === 'in' ? 'Breathe In' : 'Breathe Out';
+                
+                const circle = document.getElementById('breathingCircle');
+                if (breathingPhase === 'in') {
+                    circle.style.transform = 'scale(1.3)';
+                    circle.style.backgroundColor = 'rgba(33, 150, 243, 0.3)';
+                } else {
+                    circle.style.transform = 'scale(1)';
+                    circle.style.backgroundColor = 'transparent';
+                }
+            }, 2000);
+        }
+
+        // Pause session
+        function pauseSession() {
+            isPaused = !isPaused;
+            const pauseButton = document.getElementById('pauseButton');
+            pauseButton.textContent = isPaused ? '▶️ Resume' : '⏸️ Pause';
+        }
+
+        // Stop session
+        function stopSession() {
+            if (sessionTimer) {
+                clearInterval(sessionTimer);
+            }
+            closeSession();
+        }
+
+        // Complete session
+        function completeSession() {
+            if (sessionTimer) {
+                clearInterval(sessionTimer);
+            }
+            
+            // Update stats
+            updateStats();
+            
+            // Show completion message
+            document.getElementById('sessionTitle').textContent = 'Session Complete!';
+            document.getElementById('sessionDescription').textContent = 
+                'Great job! You\'ve completed your mindfulness practice. Take a moment to notice how you feel.';
+            document.getElementById('sessionTimer').textContent = '🎉';
+            document.getElementById('sessionControls').style.display = 'none';
+            
+            setTimeout(() => {
+                closeSession();
+            }, 3000);
+        }
+
+        // Close session
+        function closeSession() {
+            document.getElementById('sessionModal').style.display = 'none';
+            document.getElementById('breathingCircle').style.display = 'none';
+            document.getElementById('progressFill').style.width = '0%';
+            
+            if (sessionTimer) {
+                clearInterval(sessionTimer);
+            }
+        }
+
+        // Format time
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+        }
+
+        // Update stats
+        function updateStats() {
+            const totalSessions = parseInt(document.getElementById('totalSessions').textContent) + 1;
+            const totalMinutes = parseInt(document.getElementById('totalMinutes').textContent) + Math.floor(sessionDuration / 60);
+            const streakDays = parseInt(document.getElementById('streakDays').textContent);
+            
+            document.getElementById('totalSessions').textContent = totalSessions;
+            document.getElementById('totalMinutes').textContent = totalMinutes;
+            
+            // Animate the numbers
+            gsap.from('#totalSessions', {
+                scale: 1.2,
+                duration: 0.5,
+                ease: 'back.out'
+            });
+            
+            gsap.from('#totalMinutes', {
+                scale: 1.2,
+                duration: 0.5,
+                ease: 'back.out'
+            });
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('sessionModal').addEventListener('click', (e) => {
+            if (e.target.id === 'sessionModal') {
+                closeSession();
+            }
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeSession();
+            } else if (e.key === ' ' && document.getElementById('sessionModal').style.display === 'flex') {
+                e.preventDefault();
+                pauseSession();
+            }
+        });
+    </script>
+</body>
+</html>

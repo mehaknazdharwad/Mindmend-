@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindMend - AI Wellness Guide</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.1/gsap.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #003366;
+            --secondary-color: #1b2735;
+            --accent-color: #0056b3;
+            --text-light: #ffffff;
+            --text-dark: #2A2A2A;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --button-gradient: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            --user-message: #4CAF50;
+            --bot-message: #2196F3;
+            --system-message: #FF9800;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--button-gradient);
+            color: var(--text-light);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .header {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid var(--glass-border);
+            position: relative;
+        }
+
+        .back-button {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            transform: translateY(-50%) scale(1.05);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 30px;
+            height: calc(100vh - 140px);
+        }
+
+        .chat-section {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .bot-avatar {
+            width: 50px;
+            height: 50px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+        }
+
+        .bot-info h3 {
+            margin-bottom: 5px;
+        }
+
+        .bot-status {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 15px 20px;
+            border-radius: 20px;
+            position: relative;
+            animation: messageSlide 0.3s ease;
+        }
+
+        @keyframes messageSlide {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            background: var(--user-message);
+            align-self: flex-end;
+            border-bottom-right-radius: 5px;
+        }
+
+        .message.bot {
+            background: var(--bot-message);
+            align-self: flex-start;
+            border-bottom-left-radius: 5px;
+        }
+
+        .message.system {
+            background: var(--system-message);
+            align-self: center;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .message-time {
+            font-size: 0.8em;
+            opacity: 0.7;
+            margin-top: 5px;
+        }
+
+        .chat-input {
+            padding: 20px;
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .input-field {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--glass-border);
+            border-radius: 25px;
+            padding: 15px 20px;
+            color: var(--text-light);
+            font-size: 1em;
+            outline: none;
+        }
+
+        .input-field::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .send-button {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.2em;
+        }
+
+        .send-button:hover {
+            transform: scale(1.1);
+        }
+
+        .send-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .wellness-stats {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .stat-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stat-value {
+            font-weight: 600;
+            color: #FFD700;
+        }
+
+        .quick-actions {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .action-button {
+            background: var(--button-gradient);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 10px;
+            width: 100%;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .action-button:hover {
+            transform: translateX(5px);
+        }
+
+        .action-button:last-child {
+            margin-bottom: 0;
+        }
+
+        .typing-indicator {
+            display: none;
+            align-self: flex-start;
+            background: var(--bot-message);
+            padding: 15px 20px;
+            border-radius: 20px;
+            border-bottom-left-radius: 5px;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 5px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+            
+            .sidebar {
+                order: -1;
+            }
+            
+            .chat-messages {
+                max-height: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="index.html" class="back-button">← Back to MindMend</a>
+        <h1>AI Wellness Guide</h1>
+        <p>Your compassionate AI companion for mental wellness</p>
+    </div>
+
+    <div class="container">
+        <div class="chat-section" data-aos="fade-right">
+            <div class="chat-header">
+                <div class="bot-avatar">🤖</div>
+                <div class="bot-info">
+                    <h3>MindMend AI</h3>
+                    <div class="bot-status">🟢 Online - Ready to help</div>
+                </div>
+            </div>
+
+            <div class="chat-messages" id="chatMessages">
+                <div class="message bot">
+                    <div>Hello! I'm your AI wellness companion. I'm here to support you on your mental health journey. How are you feeling today?</div>
+                    <div class="message-time">Just now</div>
+                </div>
+            </div>
+
+            <div class="typing-indicator" id="typingIndicator">
+                <div class="typing-dots">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            </div>
+
+            <div class="chat-input">
+                <input type="text" class="input-field" id="messageInput" placeholder="Type your message here..." maxlength="500">
+                <button class="send-button" id="sendButton">➤</button>
+            </div>
+        </div>
+
+        <div class="sidebar" data-aos="fade-left">
+            <div class="wellness-stats">
+                <h3>📊 Wellness Stats</h3>
+                <div class="stat-item">
+                    <div class="stat-label">
+                        <span>💬</span>
+                        <span>Chat Sessions</span>
+                    </div>
+                    <div class="stat-value" id="chatSessions">12</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">
+                        <span>🌟</span>
+                        <span>MindMend Points</span>
+                    </div>
+                    <div class="stat-value" id="wellnessPoints">1,750</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">
+                        <span>🔥</span>
+                        <span>Streak Days</span>
+                    </div>
+                    <div class="stat-value" id="streakDays">7</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">
+                        <span>😊</span>
+                        <span>Mood Score</span>
+                    </div>
+                    <div class="stat-value" id="moodScore">8.5/10</div>
+                </div>
+            </div>
+
+            <div class="quick-actions">
+                <h3>⚡ Quick Actions</h3>
+                <button class="action-button" onclick="sendQuickMessage('I need help with anxiety')">
+                    😰 Anxiety Help
+                </button>
+                <button class="action-button" onclick="sendQuickMessage('I feel stressed')">
+                    😤 Stress Relief
+                </button>
+                <button class="action-button" onclick="sendQuickMessage('I want to practice mindfulness')">
+                    🧘 Mindfulness
+                </button>
+                <button class="action-button" onclick="sendQuickMessage('I need motivation')">
+                    💪 Motivation
+                </button>
+                <button class="action-button" onclick="sendQuickMessage('Tell me a positive quote')">
+                    💭 Daily Quote
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 1000,
+            once: true
+        });
+
+        // Chat functionality
+        const chatMessages = document.getElementById('chatMessages');
+        const messageInput = document.getElementById('messageInput');
+        const sendButton = document.getElementById('sendButton');
+        const typingIndicator = document.getElementById('typingIndicator');
+
+        let chatSessions = 12;
+        let wellnessPoints = 1750;
+        let streakDays = 7;
+        let moodScore = 8.5;
+
+        // AI responses database
+        const aiResponses = {
+            greetings: [
+                "Hello! I'm here to support you. How are you feeling today?",
+                "Hi there! I'm your AI wellness companion. What's on your mind?",
+                "Welcome back! I'm ready to help you with your mental wellness journey."
+            ],
+            anxiety: [
+                "I understand anxiety can be overwhelming. Let's take some deep breaths together. Inhale for 4 counts, hold for 4, exhale for 6. Repeat this 3 times.",
+                "Anxiety is your body's way of trying to protect you. Try the 5-4-3-2-1 grounding technique: Name 5 things you can see, 4 you can touch, 3 you can hear, 2 you can smell, 1 you can taste.",
+                "Remember, anxiety is temporary. Focus on what you can control right now. Would you like to try a quick meditation exercise?"
+            ],
+            stress: [
+                "Stress is a natural response, but we can manage it. Try progressive muscle relaxation: tense and release each muscle group from your toes to your head.",
+                "When stressed, take a 5-minute break. Step away, stretch, or listen to calming music. What usually helps you relax?",
+                "Stress often comes from feeling overwhelmed. Let's break down what's stressing you into smaller, manageable pieces."
+            ],
+            mindfulness: [
+                "Mindfulness is about being present. Let's start with a simple exercise: focus on your breath for 2 minutes. Notice each inhale and exhale.",
+                "Try mindful walking: pay attention to each step, how your feet feel, the sounds around you. It's a great way to center yourself.",
+                "Mindfulness isn't about clearing your mind, but observing thoughts without judgment. Would you like to try a guided meditation?"
+            ],
+            motivation: [
+                "You've already taken a great step by reaching out! Every small action counts toward your goals. What's one thing you'd like to accomplish today?",
+                "Remember why you started. Your mental health journey is unique and valuable. You're stronger than you think!",
+                "Progress isn't always linear, and that's okay. Celebrate your small wins. What's something you're proud of today?"
+            ],
+            quotes: [
+                "The only way to do great work is to love what you do. - Steve Jobs",
+                "You are never too old to set another goal or to dream a new dream. - C.S. Lewis",
+                "The mind is everything. What you think you become. - Buddha",
+                "Every day is a new beginning. Take a deep breath and start again.",
+                "You have within you right now, everything you need to deal with whatever the world can throw at you. - Brian Tracy"
+            ],
+            default: [
+                "I'm here to listen and support you. Could you tell me more about how you're feeling?",
+                "That's interesting. How does that make you feel?",
+                "I want to understand better. Can you elaborate on that?",
+                "Thank you for sharing that with me. How can I best support you right now?"
+            ]
+        };
+
+        // Add message to chat
+        function addMessage(content, sender, isTyping = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            
+            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            
+            messageDiv.innerHTML = `
+                <div>${content}</div>
+                <div class="message-time">${time}</div>
+            `;
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            // Update stats
+            if (sender === 'user') {
+                wellnessPoints += 10;
+                updateStats();
+            }
+        }
+
+        // Show typing indicator
+        function showTyping() {
+            typingIndicator.style.display = 'block';
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Hide typing indicator
+        function hideTyping() {
+            typingIndicator.style.display = 'none';
+        }
+
+        // Generate AI response
+        function generateResponse(userMessage) {
+            const message = userMessage.toLowerCase();
+            
+            if (message.includes('hello') || message.includes('hi') || message.includes('hey')) {
+                return aiResponses.greetings[Math.floor(Math.random() * aiResponses.greetings.length)];
+            } else if (message.includes('anxiety') || message.includes('worried') || message.includes('nervous')) {
+                return aiResponses.anxiety[Math.floor(Math.random() * aiResponses.anxiety.length)];
+            } else if (message.includes('stress') || message.includes('stressed') || message.includes('overwhelmed')) {
+                return aiResponses.stress[Math.floor(Math.random() * aiResponses.stress.length)];
+            } else if (message.includes('mindfulness') || message.includes('meditation') || message.includes('calm')) {
+                return aiResponses.mindfulness[Math.floor(Math.random() * aiResponses.mindfulness.length)];
+            } else if (message.includes('motivation') || message.includes('motivated') || message.includes('goal')) {
+                return aiResponses.motivation[Math.floor(Math.random() * aiResponses.motivation.length)];
+            } else if (message.includes('quote') || message.includes('inspiration')) {
+                return aiResponses.quotes[Math.floor(Math.random() * aiResponses.quotes.length)];
+            } else {
+                return aiResponses.default[Math.floor(Math.random() * aiResponses.default.length)];
+            }
+        }
+
+        // Send message
+        function sendMessage() {
+            const message = messageInput.value.trim();
+            if (!message) return;
+            
+            // Add user message
+            addMessage(message, 'user');
+            messageInput.value = '';
+            
+            // Show typing indicator
+            showTyping();
+            
+            // Generate and send AI response after delay
+            setTimeout(() => {
+                hideTyping();
+                const response = generateResponse(message);
+                addMessage(response, 'bot');
+                
+                // Update chat sessions
+                chatSessions++;
+                updateStats();
+            }, 1500 + Math.random() * 1000);
+        }
+
+        // Send quick message
+        function sendQuickMessage(message) {
+            messageInput.value = message;
+            sendMessage();
+        }
+
+        // Update stats display
+        function updateStats() {
+            document.getElementById('chatSessions').textContent = chatSessions;
+            document.getElementById('wellnessPoints').textContent = wellnessPoints.toLocaleString();
+            document.getElementById('streakDays').textContent = streakDays;
+            document.getElementById('moodScore').textContent = moodScore + '/10';
+        }
+
+        // Event listeners
+        sendButton.addEventListener('click', sendMessage);
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Auto-focus input
+        messageInput.focus();
+
+        // Welcome message after page load
+        setTimeout(() => {
+            addMessage("I'm here to support your mental wellness journey. Feel free to share anything that's on your mind, or use the quick action buttons for specific topics.", 'bot');
+        }, 1000);
+    </script>
+</body>
+</html>

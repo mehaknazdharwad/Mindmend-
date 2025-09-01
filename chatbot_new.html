@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Wellness Guide | Wellness Connect</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <style>
+        :root {
+            --primary-color: #4776E6;
+            --secondary-color: #8E54E9;
+            --accent-color: #FF4B6C;
+            --text-light: #ffffff;
+            --text-dark: #2A2A2A;
+            --card-bg: rgba(255, 255, 255, 0.95);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(-45deg, var(--primary-color), var(--secondary-color));
+            min-height: 100vh;
+            display: flex;
+        }
+
+        .chat-container {
+            display: flex;
+            width: 100%;
+            height: 100vh;
+        }
+
+        .sidebar {
+            width: 300px;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            color: var(--text-light);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-profile {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+
+        .mood-tracker {
+            margin-top: 20px;
+        }
+
+        .mood-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .mood-button {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            padding: 10px;
+            border-radius: 10px;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .mood-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .mood-button.selected {
+            background: var(--accent-color);
+        }
+
+        .chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .message {
+            max-width: 70%;
+            padding: 15px;
+            border-radius: 15px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .user-message {
+            align-self: flex-end;
+            background: var(--accent-color);
+            color: var(--text-light);
+            border-bottom-right-radius: 5px;
+        }
+
+        .bot-message {
+            align-self: flex-start;
+            background: rgba(255, 255, 255, 0.95);
+            color: var(--text-dark);
+            border-bottom-left-radius: 5px;
+        }
+
+        .chat-input {
+            display: flex;
+            gap: 10px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+        }
+
+        .message-input {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.95);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .send-button {
+            padding: 15px 30px;
+            background: var(--accent-color);
+            color: var(--text-light);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .send-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 75, 108, 0.4);
+        }
+
+        .wellness-score {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .score-chart {
+            width: 100%;
+            height: 150px;
+            margin-top: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 5px;
+        }
+
+        .suggestions {
+            margin-top: 20px;
+        }
+
+        .suggestion-chip {
+            display: inline-block;
+            padding: 8px 15px;
+            margin: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .suggestion-chip:hover {
+            background: var(--accent-color);
+            transform: translateY(-2px);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 5px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            width: fit-content;
+            margin-top: 10px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            animation: typing 1s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .rewards-indicator {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--accent-color);
+            color: var(--text-light);
+            padding: 10px 20px;
+            border-radius: 20px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="sidebar">
+            <div class="user-profile">
+                <img src="https://placekitten.com/100/100" alt="User Avatar" class="avatar">
+                <h3>Welcome back, Sarah!</h3>
+                <p>Wellness Level: 7</p>
+            </div>
+
+            <div class="mood-tracker">
+                <h3>How are you feeling?</h3>
+                <div class="mood-buttons">
+                    <button class="mood-button" onclick="selectMood('great')">😊</button>
+                    <button class="mood-button" onclick="selectMood('good')">🙂</button>
+                    <button class="mood-button" onclick="selectMood('okay')">😐</button>
+                    <button class="mood-button" onclick="selectMood('down')">😔</button>
+                    <button class="mood-button" onclick="selectMood('anxious')">😰</button>
+                    <button class="mood-button" onclick="selectMood('stressed')">😫</button>
+                </div>
+            </div>
+
+            <div class="wellness-score">
+                <h3>Weekly Wellness</h3>
+                <div class="score-chart"></div>
+            </div>
+
+            <div class="suggestions">
+                <h3>Quick Actions</h3>
+                <div class="suggestion-chip">Deep Breathing</div>
+                <div class="suggestion-chip">5-min Meditation</div>
+                <div class="suggestion-chip">Gratitude Journal</div>
+            </div>
+        </div>
+
+        <div class="chat-area">
+            <div class="rewards-indicator">
+                +50 Wellness Points | 🔥 7 Day Streak!
+            </div>
+
+            <div class="chat-messages" id="chatMessages">
+                <div class="message bot-message">
+                    Hi Sarah! I noticed you've been feeling a bit stressed lately. Would you like to talk about it or try some quick relaxation exercises?
+                </div>
+            </div>
+
+            <div class="chat-input">
+                <input type="text" class="message-input" placeholder="Type your message...">
+                <button class="send-button" onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize AOS
+        AOS.init();
+
+        let currentMood = null;
+        let wellnessPoints = 1250;
+        let messageHistory = [];
+
+        function selectMood(mood) {
+            const buttons = document.querySelectorAll('.mood-button');
+            buttons.forEach(btn => btn.classList.remove('selected'));
+            
+            const selectedButton = document.querySelector(`.mood-button[onclick="selectMood('${mood}')"]`);
+            selectedButton.classList.add('selected');
+            
+            currentMood = mood;
+            updateChatbotResponse(mood);
+        }
+
+        function updateChatbotResponse(mood) {
+            const responses = {
+                great: "That's wonderful! Would you like to share what made your day special?",
+                good: "I'm glad you're feeling good! What's been working well for you?",
+                okay: "Sometimes okay is okay. Want to talk about anything in particular?",
+                down: "I'm here to listen. What's on your mind?",
+                anxious: "Let's work through this together. Would you like to try a quick breathing exercise?",
+                stressed: "I understand. Should we explore some stress management techniques?"
+            };
+
+            addBotMessage(responses[mood]);
+        }
+
+        function addBotMessage(text) {
+            const messages = document.getElementById('chatMessages');
+            const typingIndicator = document.createElement('div');
+            typingIndicator.className = 'typing-indicator';
+            typingIndicator.innerHTML = `
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            `;
+            messages.appendChild(typingIndicator);
+
+            setTimeout(() => {
+                typingIndicator.remove();
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message bot-message';
+                messageDiv.textContent = text;
+                messages.appendChild(messageDiv);
+                messageDiv.scrollIntoView({ behavior: 'smooth' });
+            }, 1500);
+        }
+
+        function sendMessage() {
+            const input = document.querySelector('.message-input');
+            const text = input.value.trim();
+            
+            if (text) {
+                const messages = document.getElementById('chatMessages');
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message user-message';
+                messageDiv.textContent = text;
+                messages.appendChild(messageDiv);
+                
+                messageHistory.push({ role: 'user', content: text });
+                wellnessPoints += 5;
+                document.querySelector('.rewards-indicator').textContent = 
+                    `+${wellnessPoints} Wellness Points | 🔥 7 Day Streak!`;
+                
+                // Simulate AI response based on message content
+                analyzeAndRespond(text);
+                
+                input.value = '';
+                messageDiv.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function analyzeAndRespond(text) {
+            const keywords = {
+                stress: ["stress", "overwhelmed", "pressure", "too much"],
+                anxiety: ["anxiety", "worried", "nervous", "fear"],
+                depression: ["sad", "down", "depressed", "lonely"],
+                sleep: ["tired", "insomnia", "can't sleep", "exhausted"]
+            };
+
+            let responseType = "general";
+            for (let [type, words] of Object.entries(keywords)) {
+                if (words.some(word => text.toLowerCase().includes(word))) {
+                    responseType = type;
+                    break;
+                }
+            }
+
+            const responses = {
+                stress: [
+                    "Let's try a quick breathing exercise together. Ready?",
+                    "I understand things feel overwhelming. Should we break down what's causing the stress?",
+                    "Would you like to try a 2-minute mindfulness exercise?"
+                ],
+                anxiety: [
+                    "Remember, you're not alone in this. What's making you feel anxious?",
+                    "Let's work through these feelings together. Have you tried grounding techniques?",
+                    "I'm here to listen and support you. Want to explore some anxiety management tools?"
+                ],
+                depression: [
+                    "I hear you, and your feelings are valid. Would you like to talk more about it?",
+                    "Sometimes taking small steps helps. What's one tiny thing we could focus on today?",
+                    "You're stronger than you know. Should we look at some mood-lifting activities?"
+                ],
+                sleep: [
+                    "Sleep troubles can be frustrating. Would you like to try some relaxation techniques?",
+                    "Let's work on creating a calming bedtime routine together.",
+                    "Have you tried sleep meditation? I can guide you through one."
+                ],
+                general: [
+                    "Tell me more about that.",
+                    "How does that make you feel?",
+                    "What would be most helpful for you right now?"
+                ]
+            };
+
+            const response = responses[responseType][Math.floor(Math.random() * responses[responseType].length)];
+            addBotMessage(response);
+        }
+
+        // Event listener for Enter key
+        document.querySelector('.message-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Initial greeting
+        setTimeout(() => {
+            addBotMessage("Welcome back! How can I support you today?");
+        }, 1000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindMend - Mental Health Support System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.1/gsap.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #003366;
+            --secondary-color: #1b2735;
+            --accent-color: #0056b3;
+            --text-light: #ffffff;
+            --text-dark: #2A2A2A;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --button-gradient: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--button-gradient);
+            color: var(--text-light);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        header {
+            position: relative;
+            padding: 60px 20px;
+            text-align: center;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+            box-shadow: 0 4px 30px var(--shadow-color);
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            background: linear-gradient(120deg, #ffffff, #e0e0e0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 25px;
+            opacity: 0.9;
+        }
+
+        .wellness-points {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--accent-color);
+            padding: 10px 20px;
+            border-radius: 20px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .points-icon {
+            font-size: 1.2em;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            padding: 40px 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .feature-card:hover::before {
+            transform: translateX(100%);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .feature-icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: scale(1.2);
+        }
+
+        .feature-title {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            color: var(--text-light);
+        }
+
+        .feature-description {
+            font-size: 1em;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 20px;
+        }
+
+        .action-button {
+            background: var(--button-gradient);
+            color: var(--text-light);
+            padding: 12px 25px;
+            border-radius: 25px;
+            border: none;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 4px 15px var(--shadow-color);
+        }
+
+        .action-button:hover {
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 0 6px 20px var(--shadow-color);
+        }
+
+        .gamification-badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: var(--accent-color);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            transform: rotate(15deg);
+        }
+
+        .rewards-panel {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 15px;
+            border-radius: 15px;
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .reward-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 8px 15px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+
+        .streak-counter {
+            color: #FFD700;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+
+            .rewards-panel {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--button-gradient);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-screen">
+        <div class="loader"></div>
+    </div>
+
+    <div class="particles" id="particles-js"></div>
+
+    <div class="wellness-points">
+        <span class="points-icon">🌟</span>
+        <span>1,250 MindMend Points</span>
+    </div>
+
+    <header>
+        <h1 class="hero-title">MindMend</h1>
+        <p class="hero-subtitle">Your Journey to Mental Well-being Starts Here</p>
+    </header>
+
+    <div class="features-grid">
+        <div class="feature-card" data-aos="fade-up">
+            <div class="gamification-badge">+50 pts/chat</div>
+            <div class="feature-icon">🤖</div>
+            <h3 class="feature-title">AI Wellness Guide</h3>
+            <p class="feature-description">Personalized support with our emotionally intelligent AI companion</p>
+            <a href="chatbot.html" class="action-button">Start Chat</a>
+        </div>
+
+        <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+            <div class="gamification-badge">+100 pts/session</div>
+            <div class="feature-icon">👥</div>
+            <h3 class="feature-title">Support Circle</h3>
+            <p class="feature-description">Connect with peers and professionals in a safe space</p>
+            <a href="support_groups.html" class="action-button">Join Now</a>
+        </div>
+
+        <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+            <div class="gamification-badge">Daily Streak!</div>
+            <div class="feature-icon">📊</div>
+            <h3 class="feature-title">Mood & Progress</h3>
+            <p class="feature-description">Track your journey with interactive insights</p>
+            <a href="mood_tracker.html" class="action-button">Track Now</a>
+        </div>
+
+        <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+            <div class="feature-icon">🧘</div>
+            <h3 class="feature-title">Mindfulness Zone</h3>
+            <p class="feature-description">Quick exercises for stress relief and focus</p>
+            <a href="yoga_practice.html" class="action-button">Start Practice</a>
+        </div>
+
+        <div class="feature-card" data-aos="fade-up" data-aos-delay="400">
+            <div class="gamification-badge">New Content!</div>
+            <div class="feature-icon">📚</div>
+            <h3 class="feature-title">Resource Hub</h3>
+            <p class="feature-description">Curated content for mental wellness</p>
+            <a href="resource_library.html" class="action-button">Explore</a>
+        </div>
+
+        <div class="feature-card" data-aos="fade-up" data-aos-delay="500">
+            <div class="feature-icon">📊</div>
+            <h3 class="feature-title">Institution Insights</h3>
+            <p class="feature-description">Anonymous analytics for better support</p>
+            <a href="institutional_dashboard.html" class="action-button">View Stats</a>
+        </div>
+
+        <div class="feature-card" data-aos="fade-up" data-aos-delay="600">
+            <div class="gamification-badge">AI Powered!</div>
+            <div class="feature-icon">📷</div>
+            <h3 class="feature-title">Mood Detector</h3>
+            <p class="feature-description">AI-powered facial expression analysis for instant mood tracking</p>
+            <a href="mood_detector.html" class="action-button">Detect Mood</a>
+        </div>
+    </div>
+
+    <div class="rewards-panel">
+        <div class="reward-item">
+            <span>🔥</span>
+            <span class="streak-counter">7 Day Streak!</span>
+        </div>
+        <div class="reward-item">
+            <span>🎁</span>
+            <span>3 Rewards Available</span>
+        </div>
+        <div class="reward-item">
+            <span>🏆</span>
+            <span>Level 5 Helper</span>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 1000,
+            once: true
+        });
+
+        // Particles.js configuration
+        particlesJS('particles-js', {
+            particles: {
+                number: { value: 80, density: { enable: true, value_area: 800 } },
+                color: { value: '#ffffff' },
+                shape: { type: 'circle' },
+                opacity: { value: 0.5, random: false },
+                size: { value: 3, random: true },
+                line_linked: {
+                    enable: true,
+                    distance: 150,
+                    color: '#ffffff',
+                    opacity: 0.4,
+                    width: 1
+                },
+                move: {
+                    enable: true,
+                    speed: 2,
+                    direction: 'none',
+                    random: false,
+                    straight: false,
+                    out_mode: 'out',
+                    bounce: false
+                }
+            },
+            interactivity: {
+                detect_on: 'canvas',
+                events: {
+                    onhover: { enable: true, mode: 'repulse' },
+                    onclick: { enable: true, mode: 'push' },
+                    resize: true
+                }
+            },
+            retina_detect: true
+        });
+
+        // Loading screen
+        window.addEventListener('load', () => {
+            const loadingScreen = document.querySelector('.loading-screen');
+            loadingScreen.style.opacity = '0';
+            setTimeout(() => {
+                loadingScreen.style.display = 'none';
+            }, 500);
+        });
+
+        // GSAP animations
+        gsap.from('.hero-title', {
+            duration: 1,
+            y: 100,
+            opacity: 0,
+            ease: 'power4.out',
+            delay: 0.5
+        });
+
+        gsap.from('.hero-subtitle', {
+            duration: 1,
+            y: 50,
+            opacity: 0,
+            ease: 'power4.out',
+            delay: 0.8
+        });
+
+        gsap.from('.wellness-points', {
+            duration: 1,
+            x: 100,
+            opacity: 0,
+            ease: 'power4.out',
+            delay: 1
+        });
+
+        // Gamification system
+        let wellnessPoints = 1250;
+        let streakDays = 7;
+
+        function updatePoints(points) {
+            wellnessPoints += points;
+            document.querySelector('.wellness-points span:last-child').textContent = 
+                `${wellnessPoints} MindMend Points`;
+        }
+
+        // Add hover effect to feature cards
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                gsap.to(card.querySelector('.feature-icon'), {
+                    scale: 1.2,
+                    duration: 0.3
+                });
+            });
+
+            card.addEventListener('mouseleave', () => {
+                gsap.to(card.querySelector('.feature-icon'), {
+                    scale: 1,
+                    duration: 0.3
+                });
+            });
+        });
+    </script>
+</body>
+</html>

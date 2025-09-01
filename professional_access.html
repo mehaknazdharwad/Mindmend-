@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>24/7 Professional Access</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f8;
+            text-align: center;
+            padding: 50px;
+        }
+        .session-box {
+            background-color: white;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+        .button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>24/7 Professional Access</h1>
+    <p>Book a session with a certified counselor.</p>
+    <div class="session-box">
+        <h3>Chat Session</h3>
+        <p>Have a real-time chat with a counselor.</p>
+        <button class="button" onclick="bookSession('chat')">Book Chat Session</button>
+    </div>
+    <div class="session-box">
+        <h3>Video Session</h3>
+        <p>Meet with a counselor via video call.</p>
+        <button class="button" onclick="bookSession('video')">Book Video Session</button>
+    </div>
+
+    <script>
+        function bookSession(type) {
+            if (type === 'chat') {
+                alert('Your chat session has been booked!');
+            } else {
+                alert('Your video session has been booked!');
+            }
+        }
+    </script>
+</body>
+</html>
