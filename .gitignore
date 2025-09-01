@@ -65,3 +65,4 @@ venv.bak/
 # Server files
 *.pid
 *.port
+.vercel

@@ -1,4 +1,4 @@
-# 🧠 MindMend - Advanced Mental Health Support Platform
+# 🧠 Mind-Mend - Advanced Mental Health Support Platform
 
 A comprehensive, AI-powered mental health support system designed for colleges and universities, featuring real-time analytics, interactive tools, and professional-grade mental health resources.
 
@@ -51,7 +51,7 @@ A comprehensive, AI-powered mental health support system designed for colleges a
 ```bash
 # Clone the repository
 git clone <your-repo-url>
-cd "Wellness connect webpage"
+cd "mind-mend"
 
 # Start local server
 python -m http.server 8000
