@@ -1,13 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resource Library - Mind-Mend</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
+<!DOCTYPE    <style>
         :root {
             --primary-blue: #003366;
             --secondary-blue: #1b2735;
@@ -19,17 +10,22 @@
             --glass-border: rgba(255, 255, 255, 0.1);
             --shadow-color: rgba(0, 0, 0, 0.1);
             --button-gradient: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
-            --success-color: #28a745;
-            --warning-color: #ffc107;
-            --danger-color: #dc3545;
         }
 
-        * {
+        body {
+            font-family: 'Poppins', sans-serif;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-        }
-
+            background: var(--button-gradient);
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resource Library | Mental Health Support System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
         body {
             font-family: 'Poppins', sans-serif;
             margin: 0;
@@ -87,12 +83,10 @@
             display: flex;
             gap: 10px;
             align-items: center;
-            flex-wrap: wrap;
         }
 
         .search-input {
             flex: 1;
-            min-width: 200px;
             padding: 12px;
             border: 2px solid #e0e0e0;
             border-radius: 8px;
@@ -105,27 +99,11 @@
             border-color: #003366;
         }
 
-        .search-button {
-            background: var(--primary-blue);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .search-button:hover {
-            background: var(--accent-blue);
-            transform: translateY(-2px);
-        }
-
         .category-filters {
             display: flex;
             gap: 10px;
-            margin-bottom: 30px;
             flex-wrap: wrap;
-            justify-content: center;
+            margin-bottom: 30px;
         }
 
         .category-button {
@@ -136,17 +114,11 @@
             cursor: pointer;
             transition: all 0.3s ease;
             font-weight: 500;
-            white-space: nowrap;
         }
 
         .category-button.active {
             background: #003366;
             color: white;
-        }
-
-        .category-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
         .resources-grid {
@@ -159,15 +131,13 @@
             background: rgba(255, 255, 255, 0.95);
             border-radius: 15px;
             padding: 20px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.3s ease;
             position: relative;
             overflow: hidden;
-            cursor: pointer;
         }
 
         .resource-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
         }
 
         .resource-type {
@@ -179,7 +149,6 @@
             font-size: 0.8em;
             background: #e0e7ff;
             color: #003366;
-            font-weight: 600;
         }
 
         .resource-image {
@@ -188,18 +157,12 @@
             object-fit: cover;
             border-radius: 10px;
             margin-bottom: 15px;
-            transition: transform 0.3s ease;
-        }
-
-        .resource-card:hover .resource-image {
-            transform: scale(1.05);
         }
 
         .resource-title {
             color: #003366;
             margin: 10px 0;
             font-size: 1.2em;
-            line-height: 1.4;
         }
 
         .resource-description {
@@ -215,31 +178,24 @@
             color: #666;
             font-size: 0.9em;
             margin-top: 15px;
-            flex-wrap: wrap;
-            gap: 10px;
         }
 
         .resource-rating {
             color: #ffc107;
-            font-weight: 600;
         }
 
         .action-button {
-            background: var(--button-gradient);
+            background: #003366;
             color: white;
-            padding: 10px 20px;
-            border-radius: 25px;
+            padding: 8px 15px;
+            border-radius: 5px;
             text-decoration: none;
-            transition: all 0.3s ease;
+            transition: background 0.3s ease;
             display: inline-block;
-            border: none;
-            cursor: pointer;
-            font-weight: 500;
         }
 
         .action-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 51, 102, 0.3);
+            background: #004c99;
         }
 
         .featured-resources {
@@ -252,11 +208,10 @@
         .featured-title {
             color: #003366;
             margin-bottom: 20px;
-            font-size: 1.5em;
         }
 
         .progress-bar {
-            height: 8px;
+            height: 5px;
             background: #e0e7ff;
             border-radius: 5px;
             overflow: hidden;
@@ -265,9 +220,8 @@
 
         .progress-fill {
             height: 100%;
-            background: var(--button-gradient);
+            background: #003366;
             transition: width 0.3s ease;
-            border-radius: 5px;
         }
 
         .modal {
@@ -281,7 +235,6 @@
             justify-content: center;
             align-items: center;
             z-index: 1000;
-            padding: 20px;
         }
 
         .modal-content {
@@ -289,21 +242,9 @@
             padding: 30px;
             border-radius: 15px;
             max-width: 600px;
-            width: 100%;
+            width: 90%;
             max-height: 80vh;
             overflow-y: auto;
-            position: relative;
-        }
-
-        .close-button {
-            position: absolute;
-            top: 15px;
-            right: 20px;
-            background: none;
-            border: none;
-            font-size: 1.5em;
-            cursor: pointer;
-            color: #666;
         }
 
         .download-section {
@@ -325,13 +266,6 @@
             padding: 15px;
             border-radius: 10px;
             text-align: center;
-            transition: transform 0.3s ease;
-            border: 2px solid transparent;
-        }
-
-        .download-card:hover {
-            transform: translateY(-3px);
-            border-color: var(--primary-blue);
         }
 
         .download-icon {
@@ -340,467 +274,161 @@
             color: #003366;
         }
 
-        .quick-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .stat-card {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 20px;
-            border-radius: 15px;
-            text-align: center;
-            border-left: 4px solid var(--primary-blue);
-            transition: transform 0.3s ease;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-3px);
-        }
-
-        .stat-number {
-            font-size: 2em;
-            font-weight: bold;
-            color: var(--primary-blue);
-        }
-
-        .stat-label {
-            color: #666;
-            margin-top: 5px;
-        }
-
-        .resource-filters {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 30px;
-        }
-
-        .filter-row {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .filter-select {
-            padding: 8px 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            background: white;
-            min-width: 150px;
-        }
-
-        .filter-select:focus {
-            outline: none;
-            border-color: var(--primary-blue);
-        }
-
-        .sort-options {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .sort-button {
-            background: rgba(255, 255, 255, 0.8);
-            border: 2px solid #e0e0e0;
-            padding: 8px 15px;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .sort-button.active {
-            background: var(--primary-blue);
-            color: white;
-            border-color: var(--primary-blue);
-        }
-
-        .sort-button:hover {
-            transform: translateY(-2px);
-        }
-
-        .no-results {
-            text-align: center;
-            padding: 40px;
-            color: #666;
-            font-size: 1.2em;
-        }
-
-        .no-results i {
-            font-size: 3em;
-            color: #ccc;
-            margin-bottom: 20px;
-        }
-
-        /* Mobile Responsiveness */
         @media (max-width: 768px) {
-            .container {
-                padding: 0 15px;
-                margin: 20px auto;
+            .resources-grid {
+                grid-template-columns: 1fr;
             }
-
             .search-bar {
                 flex-direction: column;
-                align-items: stretch;
             }
-
-            .search-input {
-                min-width: auto;
-            }
-
             .category-filters {
                 justify-content: center;
             }
-
-            .category-button {
-                padding: 8px 15px;
-                font-size: 0.9em;
-            }
-
-            .resources-grid {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
-
-            .resource-card {
-                padding: 15px;
-            }
-
-            .resource-meta {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 5px;
-            }
-
-            .download-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .quick-stats {
-                grid-template-columns: 1fr 1fr;
-                gap: 15px;
-            }
-
-            .filter-row {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .filter-select {
-                min-width: auto;
-            }
-
-            .sort-options {
-                justify-content: center;
-            }
-
-            .modal-content {
-                padding: 20px;
-                margin: 10px;
-            }
-
-            .back-button {
-                position: relative;
-                top: auto;
-                left: auto;
-                margin-bottom: 15px;
-                align-self: flex-start;
-            }
-
-            header {
-                padding: 15px;
-            }
         }
-
-        @media (max-width: 480px) {
-            .quick-stats {
-                grid-template-columns: 1fr;
-            }
-
-            .category-button {
-                width: 100%;
-                text-align: center;
-            }
-
-            .resource-title {
-                font-size: 1.1em;
-            }
-
-            .stat-number {
-                font-size: 1.5em;
-            }
-        }
-
-        /* Loading Animation */
-        .loading-spinner {
-            display: none;
-            text-align: center;
-            padding: 40px;
-        }
-
-        .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid var(--primary-blue);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Enhanced Animations */
-        .resource-card {
-            animation: fadeInUp 0.6s ease-out;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .resource-card:nth-child(1) { animation-delay: 0.1s; }
-        .resource-card:nth-child(2) { animation-delay: 0.2s; }
-        .resource-card:nth-child(3) { animation-delay: 0.3s; }
-        .resource-card:nth-child(4) { animation-delay: 0.4s; }
-        .resource-card:nth-child(5) { animation-delay: 0.5s; }
-        .resource-card:nth-child(6) { animation-delay: 0.6s; }
     </style>
 </head>
 <body>
     <header>
         <a href="index.html" class="back-button">← Back to Home</a>
-        <h1>📚 Resource Library</h1>
+        <h1>Resource Library</h1>
         <p>Comprehensive Mental Health Resources & Learning Materials</p>
     </header>
 
     <div class="container">
-        <!-- Quick Stats -->
-        <div class="quick-stats">
-            <div class="stat-card">
-                <div class="stat-number">150+</div>
-                <div class="stat-label">Total Resources</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">12</div>
-                <div class="stat-label">Categories</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">95%</div>
-                <div class="stat-label">User Satisfaction</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">24/7</div>
-                <div class="stat-label">Available</div>
-            </div>
-        </div>
-
-        <!-- Enhanced Search Bar -->
         <div class="search-bar">
-            <input type="text" class="search-input" id="searchInput" placeholder="Search resources..." onkeyup="searchResources()">
-            <button class="search-button" onclick="searchResources()">
-                <i class="fas fa-search"></i> Search
-            </button>
+            <input type="text" class="search-input" placeholder="Search resources..." onkeyup="searchResources()">
         </div>
 
-        <!-- Advanced Filters -->
-        <div class="resource-filters">
-            <div class="filter-row">
-                <select class="filter-select" id="categoryFilter" onchange="filterResources()">
-                    <option value="all">All Categories</option>
-                    <option value="articles">Articles</option>
-                    <option value="videos">Videos</option>
-                    <option value="tools">Tools</option>
-                    <option value="courses">Courses</option>
-                    <option value="podcasts">Podcasts</option>
-                    <option value="downloads">Downloads</option>
-                </select>
-                
-                <select class="filter-select" id="difficultyFilter" onchange="filterResources()">
-                    <option value="all">All Levels</option>
-                    <option value="beginner">Beginner</option>
-                    <option value="intermediate">Intermediate</option>
-                    <option value="advanced">Advanced</option>
-                </select>
-                
-                <select class="filter-select" id="durationFilter" onchange="filterResources()">
-                    <option value="all">Any Duration</option>
-                    <option value="short">Short (< 15 min)</option>
-                    <option value="medium">Medium (15-60 min)</option>
-                    <option value="long">Long (> 60 min)</option>
-                </select>
-            </div>
-            
-            <div class="sort-options">
-                <button class="sort-button active" onclick="sortResources('relevance')">Relevance</button>
-                <button class="sort-button" onclick="sortResources('popularity')">Popularity</button>
-                <button class="sort-button" onclick="sortResources('newest')">Newest</button>
-                <button class="sort-button" onclick="sortResources('rating')">Rating</button>
-            </button>
-        </div>
-
-        <!-- Category Filters -->
         <div class="category-filters">
             <button class="category-button active" onclick="filterResources('all')">All Resources</button>
-            <button class="category-button" onclick="filterResources('articles')">📄 Articles</button>
-            <button class="category-button" onclick="filterResources('videos')">🎥 Videos</button>
-            <button class="category-button" onclick="filterResources('tools')">🛠️ Tools</button>
-            <button class="category-button" onclick="filterResources('courses')">🎓 Courses</button>
-            <button class="category-button" onclick="filterResources('podcasts')">🎧 Podcasts</button>
-            <button class="category-button" onclick="filterResources('downloads')">📥 Downloads</button>
+            <button class="category-button" onclick="filterResources('articles')">Articles</button>
+            <button class="category-button" onclick="filterResources('videos')">Videos</button>
+            <button class="category-button" onclick="filterResources('tools')">Tools</button>
+            <button class="category-button" onclick="filterResources('courses')">Courses</button>
+            <button class="category-button" onclick="filterResources('podcasts')">Podcasts</button>
+            <button class="category-button" onclick="filterResources('downloads')">Downloads</button>
         </div>
 
-        <!-- Featured Resources -->
         <div class="featured-resources">
-            <h2 class="featured-title">⭐ Featured Resources</h2>
+            <h2 class="featured-title">Featured Resources</h2>
             <div class="resources-grid">
-                <div class="resource-card" data-category="courses" data-difficulty="beginner" data-duration="long">
+                <div class="resource-card" data-category="courses">
                     <span class="resource-type">Course</span>
                     <img src="https://source.unsplash.com/random/400x300?meditation" alt="Mindfulness Course" class="resource-image">
                     <h3 class="resource-title">Mindfulness Mastery Course</h3>
-                    <p class="resource-description">A comprehensive 8-week course on mindfulness and meditation techniques for stress reduction and mental clarity.</p>
+                    <p class="resource-description">A comprehensive 8-week course on mindfulness and meditation techniques.</p>
                     <div class="progress-bar">
                         <div class="progress-fill" style="width: 75%"></div>
                     </div>
                     <div class="resource-meta">
                         <span>8 weeks • 24 lessons</span>
-                        <span class="resource-rating">★★★★★ (4.9)</span>
+                        <span class="resource-rating">★★★★★</span>
                     </div>
-                    <button class="action-button" onclick="showResourceDetails('mindfulness')">Start Learning</button>
+                    <a href="#" class="action-button" onclick="showResourceDetails('mindfulness')">Start Learning</a>
                 </div>
             </div>
         </div>
 
-        <!-- Main Resources Grid -->
-        <div class="resources-grid" id="resourcesGrid">
-            <div class="resource-card" data-category="articles" data-difficulty="beginner" data-duration="short">
+        <div class="resources-grid">
+            <div class="resource-card" data-category="articles">
                 <span class="resource-type">Article</span>
                 <img src="https://source.unsplash.com/random/400x300?stress" alt="Stress Management" class="resource-image">
                 <h3 class="resource-title">Effective Stress Management Techniques</h3>
-                <p class="resource-description">Learn science-backed strategies to manage academic and personal stress effectively.</p>
+                <p class="resource-description">Learn science-backed strategies to manage academic and personal stress.</p>
                 <div class="resource-meta">
                     <span>10 min read</span>
-                    <span class="resource-rating">★★★★☆ (4.2)</span>
+                    <span class="resource-rating">★★★★☆</span>
                 </div>
-                <button class="action-button" onclick="showResourceDetails('stress')">Read Article</button>
+                <a href="#" class="action-button" onclick="showResourceDetails('stress')">Read Article</a>
             </div>
 
-            <div class="resource-card" data-category="videos" data-difficulty="beginner" data-duration="short">
+            <div class="resource-card" data-category="videos">
                 <span class="resource-type">Video</span>
                 <img src="https://source.unsplash.com/random/400x300?yoga" alt="Anxiety Management" class="resource-image">
-                <h3 class="resource-title">Quick Anxiety Relief Exercises</h3>
-                <p class="resource-description">Immediate techniques to calm anxiety and regain control in any situation.</p>
+                <h3 class="resource-title">Anxiety Relief Exercises</h3>
+                <p class="resource-description">Quick and effective exercises to manage anxiety in any situation.</p>
                 <div class="resource-meta">
                     <span>15 min video</span>
-                    <span class="resource-rating">★★★★★ (4.8)</span>
+                    <span class="resource-rating">★★★★★</span>
                 </div>
-                <button class="action-button" onclick="showResourceDetails('anxiety')">Watch Video</button>
+                <a href="#" class="action-button" onclick="showResourceDetails('anxiety')">Watch Video</a>
             </div>
 
-            <div class="resource-card" data-category="tools" data-difficulty="beginner" data-duration="short">
+            <div class="resource-card" data-category="tools">
                 <span class="resource-type">Interactive Tool</span>
                 <img src="https://source.unsplash.com/random/400x300?journal" alt="Mood Journal" class="resource-image">
-                <h3 class="resource-title">Digital Mood Journal</h3>
-                <p class="resource-description">Track your daily moods and identify patterns with our intelligent journaling tool.</p>
+                <h3 class="resource-title">Interactive Mood Journal</h3>
+                <p class="resource-description">Track your moods and identify patterns with our interactive journaling tool.</p>
                 <div class="resource-meta">
                     <span>Daily Practice</span>
-                    <span class="resource-rating">★★★★☆ (4.5)</span>
+                    <span class="resource-rating">★★★★☆</span>
                 </div>
-                <button class="action-button" onclick="showResourceDetails('journal')">Start Journaling</button>
+                <a href="#" class="action-button" onclick="showResourceDetails('journal')">Start Journaling</a>
             </div>
 
-            <div class="resource-card" data-category="podcasts" data-difficulty="intermediate" data-duration="medium">
+            <div class="resource-card" data-category="podcasts">
                 <span class="resource-type">Podcast</span>
                 <img src="https://source.unsplash.com/random/400x300?podcast" alt="Mental Health Podcast" class="resource-image">
                 <h3 class="resource-title">Student Mental Health Stories</h3>
-                <p class="resource-description">Real stories from students about their mental health journeys and recovery.</p>
+                <p class="resource-description">Real stories from students about their mental health journeys.</p>
                 <div class="resource-meta">
                     <span>30 min episode</span>
-                    <span class="resource-rating">★★★★★ (4.7)</span>
+                    <span class="resource-rating">★★★★★</span>
                 </div>
-                <button class="action-button" onclick="showResourceDetails('podcast')">Listen Now</button>
+                <a href="#" class="action-button" onclick="showResourceDetails('podcast')">Listen Now</a>
             </div>
 
-            <div class="resource-card" data-category="courses" data-difficulty="intermediate" data-duration="long">
+            <div class="resource-card" data-category="courses">
                 <span class="resource-type">Course</span>
                 <img src="https://source.unsplash.com/random/400x300?study" alt="Academic Success" class="resource-image">
                 <h3 class="resource-title">Academic Success & Well-being</h3>
                 <p class="resource-description">Balance academic excellence with mental well-being through practical strategies.</p>
                 <div class="resource-meta">
                     <span>6 weeks • 18 lessons</span>
-                    <span class="resource-rating">★★★★☆ (4.3)</span>
+                    <span class="resource-rating">★★★★☆</span>
                 </div>
-                <button class="action-button" onclick="showResourceDetails('academic')">Enroll Now</button>
+                <a href="#" class="action-button" onclick="showResourceDetails('academic')">Enroll Now</a>
             </div>
 
-            <div class="resource-card" data-category="tools" data-difficulty="beginner" data-duration="short">
+            <div class="resource-card" data-category="tools">
                 <span class="resource-type">Assessment Tool</span>
                 <img src="https://source.unsplash.com/random/400x300?assessment" alt="Self-Assessment" class="resource-image">
                 <h3 class="resource-title">Mental Health Self-Assessment</h3>
                 <p class="resource-description">Confidential self-assessment tool with personalized recommendations.</p>
                 <div class="resource-meta">
                     <span>15 min assessment</span>
-                    <span class="resource-rating">★★★★★ (4.9)</span>
+                    <span class="resource-rating">★★★★★</span>
                 </div>
-                <button class="action-button" onclick="showResourceDetails('assessment')">Start Assessment</button>
+                <a href="#" class="action-button" onclick="showResourceDetails('assessment')">Start Assessment</a>
             </div>
         </div>
 
-        <!-- No Results Message -->
-        <div id="noResults" class="no-results" style="display: none;">
-            <i class="fas fa-search"></i>
-            <h3>No resources found</h3>
-            <p>Try adjusting your search terms or filters</p>
-        </div>
-
-        <!-- Loading Spinner -->
-        <div id="loadingSpinner" class="loading-spinner">
-            <div class="spinner"></div>
-            <p>Loading resources...</p>
-        </div>
-
-        <!-- Download Section -->
         <div class="download-section">
-            <h2 class="featured-title">📥 Downloadable Resources</h2>
+            <h2 class="featured-title">Downloadable Resources</h2>
             <div class="download-grid">
                 <div class="download-card">
                     <div class="download-icon">📄</div>
                     <h3>Stress Management Guide</h3>
                     <p>PDF Workbook</p>
-                    <button class="action-button" onclick="downloadResource('stress-guide')">Download</button>
+                    <a href="#" class="action-button">Download</a>
                 </div>
                 <div class="download-card">
                     <div class="download-icon">🎧</div>
                     <h3>Guided Meditations</h3>
                     <p>Audio Files (MP3)</p>
-                    <button class="action-button" onclick="downloadResource('meditations')">Download</button>
+                    <a href="#" class="action-button">Download</a>
                 </div>
                 <div class="download-card">
                     <div class="download-icon">📱</div>
                     <h3>Wellness Tracker</h3>
                     <p>Mobile App</p>
-                    <button class="action-button" onclick="downloadResource('wellness-app')">Download</button>
+                    <a href="#" class="action-button">Download</a>
                 </div>
                 <div class="download-card">
                     <div class="download-icon">📊</div>
                     <h3>Progress Tracker</h3>
                     <p>Excel Template</p>
-                    <button class="action-button" onclick="downloadResource('progress-tracker')">Download</button>
+                    <a href="#" class="action-button">Download</a>
                 </div>
             </div>
         </div>
@@ -809,7 +437,6 @@
     <!-- Resource Details Modal -->
     <div id="resourceModal" class="modal">
         <div class="modal-content">
-            <button class="close-button" onclick="closeModal()">&times;</button>
             <h2 id="modalTitle"></h2>
             <div id="modalContent"></div>
             <button class="action-button" onclick="closeModal()">Close</button>
@@ -817,50 +444,20 @@
     </div>
 
     <script>
-        // Initialize AOS
-        AOS.init({
-            duration: 800,
-            once: true,
-            offset: 100
-        });
-
-        // Search and filter functionality
         function searchResources() {
-            const searchText = document.getElementById('searchInput').value.toLowerCase();
-            const categoryFilter = document.getElementById('categoryFilter').value;
-            const difficultyFilter = document.getElementById('difficultyFilter').value;
-            const durationFilter = document.getElementById('durationFilter').value;
-            
+            const searchText = document.querySelector('.search-input').value.toLowerCase();
             const resources = document.querySelectorAll('.resource-card');
-            let visibleCount = 0;
             
             resources.forEach(resource => {
                 const title = resource.querySelector('.resource-title').textContent.toLowerCase();
                 const description = resource.querySelector('.resource-description').textContent.toLowerCase();
-                const category = resource.dataset.category;
-                const difficulty = resource.dataset.difficulty;
-                const duration = resource.dataset.duration;
                 
-                const matchesSearch = title.includes(searchText) || description.includes(searchText);
-                const matchesCategory = categoryFilter === 'all' || category === categoryFilter;
-                const matchesDifficulty = difficultyFilter === 'all' || difficulty === difficultyFilter;
-                const matchesDuration = durationFilter === 'all' || duration === durationFilter;
-                
-                if (matchesSearch && matchesCategory && matchesDifficulty && matchesDuration) {
+                if (title.includes(searchText) || description.includes(searchText)) {
                     resource.style.display = 'block';
-                    visibleCount++;
                 } else {
                     resource.style.display = 'none';
                 }
             });
-            
-            // Show/hide no results message
-            const noResults = document.getElementById('noResults');
-            if (visibleCount === 0) {
-                noResults.style.display = 'block';
-            } else {
-                noResults.style.display = 'none';
-            }
         }
 
         function filterResources(category) {
@@ -870,43 +467,15 @@
             });
             event.target.classList.add('active');
 
-            // Update category filter dropdown
-            document.getElementById('categoryFilter').value = category;
-            
-            // Trigger search to apply all filters
-            searchResources();
-        }
-
-        function sortResources(sortBy) {
-            // Update active sort button
-            document.querySelectorAll('.sort-button').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            event.target.classList.add('active');
-
-            const resourcesGrid = document.getElementById('resourcesGrid');
-            const resources = Array.from(resourcesGrid.children);
-
-            resources.sort((a, b) => {
-                switch(sortBy) {
-                    case 'popularity':
-                        const ratingA = parseFloat(a.querySelector('.resource-rating').textContent.match(/[\d.]+/)[0]);
-                        const ratingB = parseFloat(b.querySelector('.resource-rating').textContent.match(/[\d.]+/)[0]);
-                        return ratingB - ratingA;
-                    case 'newest':
-                        // For demo, sort by title length (shorter = newer)
-                        return a.querySelector('.resource-title').textContent.length - b.querySelector('.resource-title').textContent.length;
-                    case 'rating':
-                        const ratingA2 = parseFloat(a.querySelector('.resource-rating').textContent.match(/[\d.]+/)[0]);
-                        const ratingB2 = parseFloat(b.querySelector('.resource-rating').textContent.match(/[\d.]+/)[0]);
-                        return ratingB2 - ratingA2;
-                    default: // relevance
-                        return 0;
+            // Filter resources
+            const resources = document.querySelectorAll('.resource-card');
+            resources.forEach(resource => {
+                if (category === 'all' || resource.dataset.category === category) {
+                    resource.style.display = 'block';
+                } else {
+                    resource.style.display = 'none';
                 }
             });
-
-            // Re-append sorted resources
-            resources.forEach(resource => resourcesGrid.appendChild(resource));
         }
 
         function showResourceDetails(resourceId) {
@@ -924,18 +493,6 @@
 
         function closeModal() {
             document.getElementById('resourceModal').style.display = 'none';
-        }
-
-        function downloadResource(resourceType) {
-            // Simulate download
-            const downloadMessages = {
-                'stress-guide': 'Downloading Stress Management Guide...',
-                'meditations': 'Downloading Guided Meditations...',
-                'wellness-app': 'Redirecting to App Store...',
-                'progress-tracker': 'Downloading Progress Tracker...'
-            };
-            
-            alert(downloadMessages[resourceType] || 'Download started!');
         }
 
         function getResourceDetails(resourceId) {
@@ -957,7 +514,7 @@
                             <li>Downloadable meditation audio files</li>
                             <li>Certificate of completion</li>
                         </ul>
-                        <p><strong>Course Schedule:</strong></p>
+                        <p>Course Schedule:</p>
                         <ul>
                             <li>Week 1: Introduction to Mindfulness</li>
                             <li>Week 2: Body and Breath Awareness</li>
@@ -968,7 +525,7 @@
                             <li>Week 7: Mindful Living</li>
                             <li>Week 8: Maintaining Practice</li>
                         </ul>
-                        <p><strong>Next cohort starts in 3 days!</strong></p>
+                        <p>Next cohort starts in 3 days!</p>
                     `
                 },
                 stress: {
@@ -993,30 +550,11 @@
                         <p>Interactive exercises and worksheets included for practical application.</p>
                     `
                 },
-                anxiety: {
-                    title: "Quick Anxiety Relief Exercises",
-                    content: `
-                        <div style="margin-bottom: 20px;">
-                            <img src="https://source.unsplash.com/random/600x300?anxiety-relief" alt="Anxiety Relief" style="width: 100%; border-radius: 10px;">
-                        </div>
-                        <h3>Immediate Relief Techniques</h3>
-                        <p>Learn techniques you can use right now to calm anxiety and regain control.</p>
-                        
-                        <h3>Exercises Included:</h3>
-                        <ul>
-                            <li>4-7-8 Breathing Technique</li>
-                            <li>Progressive Muscle Relaxation</li>
-                            <li>Grounding Exercises</li>
-                            <li>Visualization Techniques</li>
-                            <li>Quick Meditation</li>
-                        </ul>
-                    `
-                }
+                // Add more resource details as needed
             };
-            
             return details[resourceId] || { 
                 title: "Resource Details", 
-                content: "Detailed content coming soon! Please check back later." 
+                content: "Detailed content coming soon... Please check back later!" 
             };
         }
 
@@ -1026,14 +564,6 @@
                 event.target.style.display = 'none';
             }
         }
-
-        // Initialize page
-        document.addEventListener('DOMContentLoaded', function() {
-            // Add loading animation
-            setTimeout(() => {
-                document.getElementById('loadingSpinner').style.display = 'none';
-            }, 1000);
-        });
     </script>
 </body>
 </html>

@@ -3,18 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stress Booster Games - Mind-Mend</title>
+    <title>Stress Booster Games | MindMend</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary-color: #003366;
-            --secondary-color: #1b2735;
-            --accent-color: #0056b3;
-            --success-color: #28a745;
-            --warning-color: #ffc107;
-            --danger-color: #dc3545;
-        }
-
         * {
             margin: 0;
             padding: 0;
@@ -23,22 +14,26 @@
 
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            background: linear-gradient(135deg, #003366, #1b2735);
             color: white;
             min-height: 100vh;
-            padding: 20px;
+            overflow-x: hidden;
         }
 
         .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 20px;
             text-align: center;
-            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .back-button {
             position: absolute;
-            top: 20px;
             left: 20px;
-            background: rgba(255, 255, 255, 0.1);
+            top: 50%;
+            transform: translateY(-50%);
+            background: #0056b3;
             color: white;
             border: none;
             padding: 10px 20px;
@@ -49,7 +44,13 @@
         }
 
         .back-button:hover {
-            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-50%) scale(1.05);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
         }
 
         .game-selector {
@@ -62,7 +63,7 @@
 
         .game-tab {
             background: rgba(255, 255, 255, 0.1);
-            border: none;
+            border: 2px solid transparent;
             color: white;
             padding: 15px 30px;
             border-radius: 25px;
@@ -72,7 +73,8 @@
         }
 
         .game-tab.active {
-            background: var(--accent-color);
+            background: #0056b3;
+            border-color: #0056b3;
             transform: scale(1.05);
         }
 
@@ -81,94 +83,85 @@
         }
 
         .game-container {
-            display: none;
-            text-align: center;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 20px;
             padding: 30px;
+            text-align: center;
             backdrop-filter: blur(10px);
-            max-width: 800px;
-            margin: 0 auto;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .game-container.active {
-            display: block;
+        .game-area {
+            min-height: 400px;
+            position: relative;
+            margin: 20px 0;
+            border-radius: 15px;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.2);
         }
 
-        .game-title {
-            font-size: 2em;
-            margin-bottom: 20px;
-            color: var(--accent-color);
-        }
-
-        .game-instructions {
-            margin-bottom: 20px;
-            font-size: 1.1em;
-            line-height: 1.6;
-        }
-
-        .score-board {
+        .game-stats {
             display: flex;
             justify-content: space-around;
             margin: 20px 0;
-            font-size: 1.2em;
+            flex-wrap: wrap;
         }
 
-        .score-item {
+        .stat-item {
             background: rgba(255, 255, 255, 0.1);
             padding: 15px;
             border-radius: 15px;
             min-width: 120px;
         }
 
-        .start-button {
-            background: var(--success-color);
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        .control-button {
+            background: linear-gradient(135deg, #0056b3, #003366);
             color: white;
             border: none;
             padding: 15px 30px;
             border-radius: 25px;
             cursor: pointer;
-            font-size: 18px;
-            margin: 20px 0;
+            font-size: 16px;
+            margin: 10px;
             transition: all 0.3s ease;
         }
 
-        .start-button:hover {
-            transform: scale(1.05);
-            background: #218838;
+        .control-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
 
-        .start-button:disabled {
-            background: #6c757d;
+        .control-button:disabled {
+            opacity: 0.5;
             cursor: not-allowed;
-            transform: none;
         }
 
-        /* Game 1: Balloon Popping */
+        /* Game 1: Balloon Pop */
         .balloon {
             width: 60px;
             height: 80px;
-            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
-            border-radius: 50%;
+            background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
             position: absolute;
             cursor: pointer;
-            animation: float 3s ease-in-out infinite;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .balloon:nth-child(2n) {
-            background: linear-gradient(45deg, #4ecdc4, #44a08d);
-            animation-delay: 0.5s;
-        }
-
-        .balloon:nth-child(3n) {
-            background: linear-gradient(45deg, #45b7d1, #96c93d);
-            animation-delay: 1s;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
         }
 
         .balloon:hover {
@@ -185,141 +178,214 @@
             100% { transform: scale(0); opacity: 0; }
         }
 
-        /* Game 2: Stress Ball */
-        .stress-ball-container {
-            position: relative;
-            width: 200px;
-            height: 200px;
-            margin: 0 auto;
+        /* Game 2: Bubble Wrap */
+        .bubble {
+            width: 50px;
+            height: 50px;
+            background: radial-gradient(circle, #87CEEB, #4682B4);
+            border-radius: 50%;
+            position: absolute;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 2px solid #fff;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
         }
 
+        .bubble:hover {
+            transform: scale(1.1);
+        }
+
+        .bubble.popped {
+            animation: bubblePop 0.4s ease-out;
+        }
+
+        @keyframes bubblePop {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.3); opacity: 0.6; }
+            100% { transform: scale(0); opacity: 0; }
+        }
+
+        /* Game 3: Stress Ball */
         .stress-ball {
-            width: 200px;
-            height: 200px;
-            background: radial-gradient(circle, #ff6b6b, #c44569);
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, #FF6B6B, #FF8E8E);
             border-radius: 50%;
+            position: absolute;
             cursor: pointer;
             transition: all 0.1s ease;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-            position: relative;
-            overflow: hidden;
+            border: 3px solid #fff;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
         }
 
         .stress-ball:active {
             transform: scale(0.9);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-        }
-
-        .stress-ball::before {
-            content: '';
-            position: absolute;
-            top: 20%;
-            left: 20%;
-            width: 60%;
-            height: 60%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.3), transparent);
-            border-radius: 50%;
         }
 
         .squeeze-counter {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 2em;
-            font-weight: bold;
-            color: white;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 14px;
         }
 
-        /* Game 3: Breathing Exercise */
-        .breathing-circle {
-            width: 200px;
-            height: 200px;
-            border: 8px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            margin: 0 auto;
-            position: relative;
+        .achievements-bar {
             display: flex;
-            align-items: center;
             justify-content: center;
-            font-size: 1.5em;
-            font-weight: bold;
-            transition: all 2s ease-in-out;
-        }
-
-        .breathing-circle.breathing-in {
-            transform: scale(1.5);
-            border-color: var(--success-color);
-            background: rgba(40, 167, 69, 0.2);
-        }
-
-        .breathing-circle.breathing-out {
-            transform: scale(1);
-            border-color: var(--accent-color);
-            background: rgba(0, 86, 179, 0.2);
-        }
-
-        .breathing-instructions {
+            gap: 30px;
             margin-top: 20px;
-            font-size: 1.1em;
-        }
-
-        .breathing-progress {
-            width: 100%;
-            height: 10px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 5px;
-            margin: 20px 0;
-            overflow: hidden;
-        }
-
-        .breathing-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--success-color), var(--accent-color));
-            transition: width 0.1s ease;
-        }
-
-        .game-over {
             background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
+            padding: 15px;
             border-radius: 15px;
-            margin-top: 20px;
-        }
-
-        .game-over h3 {
-            color: var(--accent-color);
-            margin-bottom: 15px;
-        }
-
-        .restart-button {
-            background: var(--warning-color);
-            color: #333;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-top: 15px;
-            transition: all 0.3s ease;
-        }
-
-        .restart-button:hover {
-            transform: scale(1.05);
+            backdrop-filter: blur(5px);
         }
 
         .achievement {
-            background: var(--success-color);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 20px;
-            margin: 10px 0;
-            animation: slideIn 0.5s ease-out;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            transition: all 0.3s ease;
         }
 
-        @keyframes slideIn {
-            from { transform: translateY(-50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+        .achievement:hover {
+            transform: translateY(-2px);
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .achievement-icon {
+            font-size: 1.5em;
+        }
+
+        .achievement-points, .achievement-level, .achievement-streak {
+            font-weight: 600;
+            color: #4CAF50;
+        }
+
+        .achievement-label {
+            font-size: 0.8em;
+            opacity: 0.8;
+        }
+
+        .level-up-animation {
+            animation: levelUp 0.5s ease-out;
+        }
+
+        @keyframes levelUp {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Memory Game Styles */
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .memory-card {
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            position: relative;
+            transform-style: preserve-3d;
+        }
+
+        .memory-card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .memory-card.matched {
+            transform: scale(0.95);
+            opacity: 0.8;
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            border-radius: 10px;
+        }
+
+        .card-front {
+            background: white;
+            transform: rotateY(180deg);
+        }
+
+        .card-back {
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+        }
+
+        /* Breathing Exercise Styles */
+        .breathing-circle {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+
+        .breathing-circle::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        .breathing-instruction {
+            color: white;
+            font-size: 1.2em;
+            text-align: center;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.5; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .breathing-inhale .breathing-circle {
+            transform: scale(1.2);
+            transition: transform 4s ease-in;
+        }
+
+        .breathing-exhale .breathing-circle {
+            transform: scale(1);
+            transition: transform 4s ease-out;
         }
 
         @media (max-width: 768px) {
@@ -328,168 +394,289 @@
                 align-items: center;
             }
             
-            .game-tab {
-                width: 200px;
-            }
-            
-            .score-board {
+            .game-stats {
                 flex-direction: column;
-                gap: 10px;
+                align-items: center;
             }
             
-            .score-item {
-                min-width: auto;
+            .stat-item {
+                margin: 5px 0;
+            }
+
+            .memory-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+                padding: 10px;
             }
         }
     </style>
 </head>
 <body>
-    <a href="index.html" class="back-button">← Back to Home</a>
-    
     <div class="header">
-        <h1>🎮 Stress Booster Games</h1>
-        <p>Fun and effective ways to reduce stress and boost your mood</p>
-    </div>
-
-    <div class="game-selector">
-        <button class="game-tab active" onclick="switchGame('balloon')">🎈 Balloon Popping</button>
-        <button class="game-tab" onclick="switchGame('stressball')">🏀 Stress Ball Squeeze</button>
-        <button class="game-tab" onclick="switchGame('breathing')">🫁 Breathing Exercise</button>
-    </div>
-
-    <!-- Game 1: Balloon Popping -->
-    <div id="balloonGame" class="game-container active">
-        <h2 class="game-title">🎈 Balloon Popping Challenge</h2>
-        <p class="game-instructions">
-            Pop as many balloons as you can before time runs out! Click on the balloons to pop them and earn points.
-            The faster you pop them, the higher your score!
-        </p>
-        
-        <div class="score-board">
-            <div class="score-item">
-                <div>Score</div>
-                <div id="balloonScore">0</div>
+        <a href="index.html" class="back-button">← Back to MindMend</a>
+        <h1>Stress Booster Games</h1>
+        <p>Fun activities to help reduce stress and anxiety</p>
+        <div class="achievements-bar">
+            <div class="achievement">
+                <span class="achievement-icon">🏆</span>
+                <span class="achievement-points">0</span>
+                <span class="achievement-label">Points</span>
             </div>
-            <div class="score-item">
-                <div>Time Left</div>
-                <div id="balloonTime">30s</div>
+            <div class="achievement">
+                <span class="achievement-icon">⭐</span>
+                <span class="achievement-level">Level 1</span>
             </div>
-            <div class="score-item">
-                <div>High Score</div>
-                <div id="balloonHighScore">0</div>
+            <div class="achievement">
+                <span class="achievement-icon">🎯</span>
+                <span class="achievement-streak">0</span>
+                <span class="achievement-label">Day Streak</span>
             </div>
-        </div>
-
-        <button class="start-button" id="balloonStartBtn" onclick="startBalloonGame()">Start Game</button>
-        
-        <div id="balloonContainer" style="position: relative; height: 400px; margin: 20px 0; border: 2px dashed rgba(255,255,255,0.3); border-radius: 15px;">
-            <p style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: rgba(255,255,255,0.7);">
-                Click "Start Game" to begin popping balloons!
-            </p>
-        </div>
-
-        <div id="balloonGameOver" class="game-over" style="display: none;">
-            <h3>🎉 Game Over!</h3>
-            <p>Final Score: <span id="balloonFinalScore">0</span></p>
-            <p id="balloonMessage"></p>
-            <button class="restart-button" onclick="startBalloonGame()">Play Again</button>
         </div>
     </div>
 
-    <!-- Game 2: Stress Ball Squeezing -->
-    <div id="stressballGame" class="game-container">
-        <h2 class="game-title">🏀 Stress Ball Squeeze</h2>
-        <p class="game-instructions">
-            Squeeze the stress ball as many times as you can in 60 seconds! 
-            This is a great way to release tension and improve focus.
-        </p>
-        
-        <div class="score-board">
-            <div class="score-item">
-                <div>Squeezes</div>
-                <div id="squeezeCount">0</div>
-            </div>
-            <div class="score-item">
-                <div>Time Left</div>
-                <div id="squeezeTime">60s</div>
-            </div>
-            <div class="score-item">
-                <div>High Score</div>
-                <div id="squeezeHighScore">0</div>
-            </div>
+    <div class="container">
+        <div class="game-selector">
+            <button class="game-tab active" onclick="switchGame('balloon')">🎈 Balloon Pop</button>
+            <button class="game-tab" onclick="switchGame('bubble')">🫧 Bubble Wrap</button>
+            <button class="game-tab" onclick="switchGame('stressball')">🏀 Stress Ball</button>
+            <button class="game-tab" onclick="switchGame('memory')">🎴 Memory Match</button>
+            <button class="game-tab" onclick="switchGame('breathing')">🌬️ Breathing Exercise</button>
+            <button class="game-tab" onclick="switchGame('memory')">🧩 Memory Match</button>
+            <button class="game-tab" onclick="switchGame('breathing')">🌸 Breathing Exercise</button>
         </div>
 
-        <button class="start-button" id="stressballStartBtn" onclick="startStressballGame()">Start Squeezing</button>
-        
-        <div class="stress-ball-container">
-            <div class="stress-ball" id="stressBall" onclick="squeezeBall()">
-                <div class="squeeze-counter" id="squeezeCounter">0</div>
+        <!-- Game 1: Balloon Pop -->
+        <div id="balloonGame" class="game-container">
+            <h2>🎈 Balloon Pop Challenge</h2>
+            <p>Pop as many balloons as you can before time runs out!</p>
+            
+            <div class="game-stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="balloonScore">0</div>
+                    <div class="stat-label">Balloons Popped</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="balloonTime">30</div>
+                    <div class="stat-label">Time Left</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="balloonHighScore">0</div>
+                    <div class="stat-label">High Score</div>
+                </div>
             </div>
+
+            <div class="game-area" id="balloonArea">
+                <p style="padding: 50px; font-size: 18px;">Click "Start Game" to begin popping balloons!</p>
+            </div>
+
+            <button class="control-button" id="balloonStartBtn" onclick="startBalloonGame()">Start Game</button>
+            <button class="control-button" id="balloonResetBtn" onclick="resetBalloonGame()" disabled>Reset</button>
         </div>
 
-        <div id="stressballGameOver" class="game-over" style="display: none;">
-            <h3>💪 Great Job!</h3>
-            <p>Total Squeezes: <span id="stressballFinalScore">0</span></p>
-            <p id="stressballMessage"></p>
-            <button class="restart-button" onclick="startStressballGame()">Squeeze Again</button>
-        </div>
-    </div>
+        <!-- Game 2: Bubble Wrap -->
+        <div id="bubbleGame" class="game-container hidden">
+            <h2>🫧 Virtual Bubble Wrap</h2>
+            <p>Pop all the bubbles to relieve stress!</p>
+            
+            <div class="game-stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="bubbleScore">0</div>
+                    <div class="stat-label">Bubbles Popped</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="bubbleTotal">0</div>
+                    <div class="stat-label">Total Bubbles</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="bubbleProgress">0%</div>
+                    <div class="stat-label">Progress</div>
+                </div>
+            </div>
 
-    <!-- Game 3: Breathing Exercise -->
-    <div id="breathingGame" class="game-container">
-        <h2 class="game-title">🫁 Breathing Exercise</h2>
-        <p class="game-instructions">
-            Follow the guided breathing exercise to reduce stress and anxiety. 
-            Breathe in when the circle expands, and out when it contracts.
-        </p>
-        
-        <div class="score-board">
-            <div class="score-item">
-                <div>Breaths</div>
-                <div id="breathCount">0</div>
+            <div class="game-area" id="bubbleArea">
+                <p style="padding: 50px; font-size: 18px;">Click "Generate Bubbles" to start popping!</p>
             </div>
-            <div class="score-item">
-                <div>Session Time</div>
-                <div id="breathingTime">0:00</div>
-            </div>
-            <div class="score-item">
-                <div>Focus Score</div>
-                <div id="focusScore">100%</div>
-            </div>
+
+            <button class="control-button" onclick="generateBubbles()">Generate Bubbles</button>
+            <button class="control-button" onclick="resetBubbleGame()">Reset</button>
         </div>
 
-        <button class="start-button" id="breathingStartBtn" onclick="startBreathingGame()">Start Breathing</button>
-        
-        <div class="breathing-circle" id="breathingCircle">
-            Breathe
-        </div>
-        
-        <div class="breathing-instructions" id="breathingInstructions">
-            Click "Start Breathing" to begin your relaxation session
-        </div>
-        
-        <div class="breathing-progress">
-            <div class="breathing-fill" id="breathingFill" style="width: 0%"></div>
+        <!-- Game 3: Stress Ball -->
+        <div id="stressballGame" class="game-container hidden">
+            <h2>🏀 Stress Ball Squeeze</h2>
+            <p>Squeeze the stress ball as many times as you can in 30 seconds!</p>
+
+        <!-- Game 4: Memory Match -->
+        <div id="memoryGame" class="game-container hidden">
+            <h2>🧩 Memory Match</h2>
+            <p>Match the pairs of calming images to clear your mind</p>
+            
+            <div class="game-stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="memoryMoves">0</div>
+                    <div class="stat-label">Moves</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="memoryMatches">0</div>
+                    <div class="stat-label">Matches</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="memoryTime">0:00</div>
+                    <div class="stat-label">Time</div>
+                </div>
+            </div>
+
+            <div class="game-area" id="memoryArea">
+                <div class="memory-grid"></div>
+            </div>
+
+            <button class="control-button" id="memoryStartBtn" onclick="startMemoryGame()">Start Game</button>
+            <button class="control-button" id="memoryResetBtn" onclick="resetMemoryGame()" disabled>Reset</button>
         </div>
 
-        <div id="breathingGameOver" class="game-over" style="display: none;">
-            <h3>🧘‍♀️ Session Complete!</h3>
-            <p>Total Breaths: <span id="breathingFinalScore">0</span></p>
-            <p>Session Duration: <span id="breathingDuration">0:00</span></p>
-            <p id="breathingMessage"></p>
-            <button class="restart-button" onclick="startBreathingGame()">Start New Session</button>
+        <!-- Game 5: Breathing Exercise -->
+        <div id="breathingGame" class="game-container hidden">
+            <h2>🌸 Guided Breathing</h2>
+            <p>Follow the animation for a calming breathing exercise</p>
+
+            <div class="game-stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="breathingCycles">0</div>
+                    <div class="stat-label">Cycles</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="breathingTime">5:00</div>
+                    <div class="stat-label">Time Left</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="breathingStreak">0</div>
+                    <div class="stat-label">Daily Streak</div>
+                </div>
+            </div>
+
+            <div class="game-area" id="breathingArea">
+                <div class="breathing-circle">
+                    <div class="breathing-instruction">Get Ready</div>
+                    <div class="breathing-progress"></div>
+                </div>
+            </div>
+
+            <button class="control-button" id="breathingStartBtn" onclick="startBreathingExercise()">Start Exercise</button>
+            <button class="control-button" id="breathingStopBtn" onclick="stopBreathingExercise()" disabled>Stop</button>
+        </div>
+            
+            <div class="game-stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="stressballScore">0</div>
+                    <div class="stat-label">Squeezes</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="stressballTime">30</div>
+                    <div class="stat-label">Time Left</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="stressballHighScore">0</div>
+                    <div class="stat-label">High Score</div>
+                </div>
+            </div>
+
+            <div class="game-area" id="stressballArea">
+                <div class="stress-ball" id="stressBall" onclick="squeezeBall()">
+                    💪
+                </div>
+                <div class="squeeze-counter">
+                    Squeeze me!
+                </div>
+            </div>
+
+            <button class="control-button" id="stressballStartBtn" onclick="startStressballGame()">Start Game</button>
+            <button class="control-button" id="stressballResetBtn" onclick="resetStressballGame()" disabled>Reset</button>
+        </div>
+
+        <!-- Game 4: Memory Match -->
+        <div id="memoryGame" class="game-container hidden">
+            <h2>🎴 Memory Match Challenge</h2>
+            <p>Match pairs of cards to improve focus and memory!</p>
+            
+            <div class="game-stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="memoryMatches">0</div>
+                    <div class="stat-label">Matches Found</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="memoryMoves">0</div>
+                    <div class="stat-label">Moves Made</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="memoryTime">0</div>
+                    <div class="stat-label">Time (s)</div>
+                </div>
+            </div>
+
+            <div class="game-area" id="memoryArea">
+                <div class="memory-grid"></div>
+            </div>
+
+            <button class="control-button" id="memoryStartBtn" onclick="startMemoryGame()">Start Game</button>
+            <button class="control-button" id="memoryResetBtn" onclick="resetMemoryGame()" disabled>Reset</button>
+        </div>
+
+        <!-- Game 5: Breathing Exercise -->
+        <div id="breathingGame" class="game-container hidden">
+            <h2>🌬️ Guided Breathing Exercise</h2>
+            <p>Follow the animation for a calming breathing session</p>
+            
+            <div class="game-stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="breathingCycles">0</div>
+                    <div class="stat-label">Cycles Completed</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="breathingTime">5:00</div>
+                    <div class="stat-label">Time Remaining</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="totalBreathingTime">0</div>
+                    <div class="stat-label">Total Practice (min)</div>
+                </div>
+            </div>
+
+            <div class="game-area" id="breathingArea">
+                <div class="breathing-circle">
+                    <div class="breathing-instruction">Get Ready</div>
+                </div>
+            </div>
+
+            <button class="control-button" id="breathingStartBtn" onclick="startBreathingExercise()">Start Exercise</button>
+            <button class="control-button" id="breathingResetBtn" onclick="resetBreathingExercise()" disabled>Reset</button>
         </div>
     </div>
 
     <script>
         let currentGame = 'balloon';
-        let gameIntervals = {};
+        let balloonGameInterval;
+        let stressballGameInterval;
+        let balloonScore = 0;
+        let bubbleScore = 0;
+        let stressballScore = 0;
+        let balloonTime = 30;
+        let stressballTime = 30;
+        let totalPoints = parseInt(localStorage.getItem('totalPoints')) || 0;
+        let currentLevel = parseInt(localStorage.getItem('currentLevel')) || 1;
+        let dailyStreak = parseInt(localStorage.getItem('dailyStreak')) || 0;
+        let lastPlayDate = localStorage.getItem('lastPlayDate') || '';
+        
+        // Points system
+        const POINTS_PER_BALLOON = 10;
+        const POINTS_PER_BUBBLE = 5;
+        const POINTS_PER_SQUEEZE = 2;
+        const POINTS_FOR_LEVEL_UP = 1000;
 
         // Game switching
-        function switchGame(gameType) {
+        function switchGame(game) {
             // Hide all games
             document.querySelectorAll('.game-container').forEach(container => {
-                container.classList.remove('active');
+                container.classList.add('hidden');
             });
             
             // Remove active class from all tabs
@@ -498,46 +685,30 @@
             });
             
             // Show selected game and activate tab
-            document.getElementById(gameType + 'Game').classList.add('active');
+            document.getElementById(game + 'Game').classList.remove('hidden');
             event.target.classList.add('active');
             
-            currentGame = gameType;
-            
-            // Stop any running games
-            stopAllGames();
+            currentGame = game;
         }
 
-        function stopAllGames() {
-            Object.values(gameIntervals).forEach(interval => {
-                if (interval) clearInterval(interval);
-            });
-            gameIntervals = {};
-        }
-
-        // Game 1: Balloon Popping
-        let balloonScore = 0;
-        let balloonTimeLeft = 30;
-        let balloonGameRunning = false;
-        let balloonHighScore = localStorage.getItem('balloonHighScore') || 0;
-
+        // Game 1: Balloon Pop
         function startBalloonGame() {
-            if (balloonGameRunning) return;
-            
-            balloonGameRunning = true;
             balloonScore = 0;
-            balloonTimeLeft = 30;
+            balloonTime = 30;
+            updateBalloonStats();
             
-            document.getElementById('balloonScore').textContent = balloonScore;
             document.getElementById('balloonStartBtn').disabled = true;
-            document.getElementById('balloonGameOver').style.display = 'none';
-            document.getElementById('balloonContainer').innerHTML = '';
+            document.getElementById('balloonResetBtn').disabled = false;
             
-            // Create balloons
-            gameIntervals.balloon = setInterval(() => {
-                if (balloonTimeLeft > 0) {
+            // Clear previous balloons
+            document.getElementById('balloonArea').innerHTML = '';
+            
+            // Start timer
+            balloonGameInterval = setInterval(() => {
+                if (balloonTime > 0) {
                     createBalloon();
-                    balloonTimeLeft--;
-                    document.getElementById('balloonTime').textContent = balloonTimeLeft + 's';
+                    balloonTime--;
+                    updateBalloonStats();
                 } else {
                     endBalloonGame();
                 }
@@ -547,67 +718,107 @@
         function createBalloon() {
             const balloon = document.createElement('div');
             balloon.className = 'balloon';
-            balloon.style.left = Math.random() * 85 + '%';
-            balloon.style.top = Math.random() * 85 + '%';
+            balloon.style.left = Math.random() * 80 + 10 + '%';
+            balloon.style.top = Math.random() * 70 + 15 + '%';
+            balloon.innerHTML = '🎈';
             
             balloon.onclick = function() {
-                if (!balloon.classList.contains('popped')) {
-                    balloon.classList.add('popped');
-                    balloonScore += 10;
-                    document.getElementById('balloonScore').textContent = balloonScore;
-                    
-                    setTimeout(() => balloon.remove(), 300);
-                }
+                balloonScore++;
+                updateBalloonStats();
+                balloon.classList.add('popped');
+                setTimeout(() => balloon.remove(), 300);
             };
             
-            document.getElementById('balloonContainer').appendChild(balloon);
+            document.getElementById('balloonArea').appendChild(balloon);
         }
 
         function endBalloonGame() {
-            balloonGameRunning = false;
-            clearInterval(gameIntervals.balloon);
+            clearInterval(balloonGameInterval);
+            document.getElementById('balloonStartBtn').disabled = false;
+            document.getElementById('balloonResetBtn').disabled = false;
             
-            if (balloonScore > balloonHighScore) {
-                balloonHighScore = balloonScore;
-                localStorage.setItem('balloonHighScore', balloonHighScore);
-                document.getElementById('balloonHighScore').textContent = balloonHighScore;
+            // Update high score
+            const highScore = Math.max(balloonScore, parseInt(localStorage.getItem('balloonHighScore') || 0));
+            localStorage.setItem('balloonHighScore', highScore);
+            document.getElementById('balloonHighScore').textContent = highScore;
+            
+            alert(`Game Over! You popped ${balloonScore} balloons!`);
+        }
+
+        function resetBalloonGame() {
+            clearInterval(balloonGameInterval);
+            balloonScore = 0;
+            balloonTime = 30;
+            updateBalloonStats();
+            document.getElementById('balloonArea').innerHTML = '<p style="padding: 50px; font-size: 18px;">Click "Start Game" to begin popping balloons!</p>';
+            document.getElementById('balloonStartBtn').disabled = false;
+            document.getElementById('balloonResetBtn').disabled = true;
+        }
+
+        function updateBalloonStats() {
+            document.getElementById('balloonScore').textContent = balloonScore;
+            document.getElementById('balloonTime').textContent = balloonTime;
+        }
+
+        // Game 2: Bubble Wrap
+        function generateBubbles() {
+            const bubbleArea = document.getElementById('bubbleArea');
+            bubbleArea.innerHTML = '';
+            bubbleScore = 0;
+            
+            const rows = 8;
+            const cols = 12;
+            const totalBubbles = rows * cols;
+            
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < cols; j++) {
+                    const bubble = document.createElement('div');
+                    bubble.className = 'bubble';
+                    bubble.style.left = (j * 60 + 20) + 'px';
+                    bubble.style.top = (i * 60 + 20) + 'px';
+                    
+                    bubble.onclick = function() {
+                        bubbleScore++;
+                        updateBubbleStats();
+                        bubble.classList.add('popped');
+                        setTimeout(() => bubble.remove(), 400);
+                    };
+                    
+                    bubbleArea.appendChild(bubble);
+                }
             }
             
-            document.getElementById('balloonFinalScore').textContent = balloonScore;
-            document.getElementById('balloonMessage').textContent = getBalloonMessage(balloonScore);
-            document.getElementById('balloonGameOver').style.display = 'block';
-            document.getElementById('balloonStartBtn').disabled = false;
+            document.getElementById('bubbleTotal').textContent = totalBubbles;
+            updateBubbleStats();
         }
 
-        function getBalloonMessage(score) {
-            if (score >= 200) return "🎉 Amazing! You're a balloon popping master!";
-            if (score >= 150) return "🌟 Excellent work! Great stress relief!";
-            if (score >= 100) return "👍 Good job! You're getting the hang of it!";
-            if (score >= 50) return "💪 Nice effort! Keep practicing!";
-            return "😊 Good start! Try again to improve your score!";
+        function updateBubbleStats() {
+            document.getElementById('bubbleScore').textContent = bubbleScore;
+            const total = parseInt(document.getElementById('bubbleTotal').textContent);
+            const progress = total > 0 ? Math.round((bubbleScore / total) * 100) : 0;
+            document.getElementById('bubbleProgress').textContent = progress + '%';
         }
 
-        // Game 2: Stress Ball Squeezing
-        let squeezeCount = 0;
-        let squeezeTimeLeft = 60;
-        let stressballGameRunning = false;
-        let squeezeHighScore = localStorage.getItem('squeezeHighScore') || 0;
+        function resetBubbleGame() {
+            bubbleScore = 0;
+            document.getElementById('bubbleArea').innerHTML = '<p style="padding: 50px; font-size: 18px;">Click "Generate Bubbles" to start popping!</p>';
+            updateBubbleStats();
+        }
 
+        // Game 3: Stress Ball
         function startStressballGame() {
-            if (stressballGameRunning) return;
+            stressballScore = 0;
+            stressballTime = 30;
+            updateStressballStats();
             
-            stressballGameRunning = true;
-            squeezeCount = 0;
-            squeezeTimeLeft = 60;
+            document.getElementById('stressballStartBtn').disabled = true;
+            document.getElementById('stressballResetBtn').disabled = false;
             
-            document.getElementById('squeezeCount').textContent = squeezeCount;
-            document.getElementById('squeezeStartBtn').disabled = true;
-            document.getElementById('stressballGameOver').style.display = 'none';
-            
-            gameIntervals.stressball = setInterval(() => {
-                if (squeezeTimeLeft > 0) {
-                    squeezeTimeLeft--;
-                    document.getElementById('squeezeTime').textContent = squeezeTimeLeft + 's';
+            // Start timer
+            stressballGameInterval = setInterval(() => {
+                if (stressballTime > 0) {
+                    stressballTime--;
+                    updateStressballStats();
                 } else {
                     endStressballGame();
                 }
@@ -615,156 +826,308 @@
         }
 
         function squeezeBall() {
-            if (!stressballGameRunning) return;
-            
-            squeezeCount++;
-            document.getElementById('squeezeCount').textContent = squeezeCount;
-            document.getElementById('squeezeCounter').textContent = squeezeCount;
-            
-            // Add visual feedback
-            const ball = document.getElementById('stressBall');
-            ball.style.transform = 'scale(0.9)';
-            setTimeout(() => {
-                ball.style.transform = 'scale(1)';
-            }, 100);
+            if (stressballTime > 0 && stressballTime < 30) {
+                stressballScore++;
+                updateStressballStats();
+                
+                // Visual feedback
+                const ball = document.getElementById('stressBall');
+                ball.style.transform = 'scale(0.8)';
+                setTimeout(() => {
+                    ball.style.transform = 'scale(1)';
+                }, 100);
+            }
         }
 
         function endStressballGame() {
-            stressballGameRunning = false;
-            clearInterval(gameIntervals.stressball);
-            
-            if (squeezeCount > squeezeHighScore) {
-                squeezeHighScore = squeezeCount;
-                localStorage.setItem('squeezeHighScore', squeezeHighScore);
-                document.getElementById('squeezeHighScore').textContent = squeezeHighScore;
-            }
-            
-            document.getElementById('stressballFinalScore').textContent = squeezeCount;
-            document.getElementById('stressballMessage').textContent = getStressballMessage(squeezeCount);
-            document.getElementById('stressballGameOver').style.display = 'block';
+            clearInterval(stressballGameInterval);
             document.getElementById('stressballStartBtn').disabled = false;
+            document.getElementById('stressballResetBtn').disabled = false;
+            
+            // Update high score
+            const highScore = Math.max(stressballScore, parseInt(localStorage.getItem('stressballHighScore') || 0));
+            localStorage.setItem('stressballHighScore', highScore);
+            document.getElementById('stressballHighScore').textContent = highScore;
+            
+            alert(`Time's up! You squeezed the ball ${stressballScore} times!`);
         }
 
-        function getStressballMessage(count) {
-            if (count >= 100) return "💪 Incredible! You're a stress-busting champion!";
-            if (count >= 80) return "🌟 Fantastic! Amazing stress relief!";
-            if (count >= 60) return "👍 Great job! You really worked it out!";
-            if (count >= 40) return "💪 Good effort! Keep squeezing!";
-            return "😊 Nice start! Practice makes perfect!";
+        function resetStressballGame() {
+            clearInterval(stressballGameInterval);
+            stressballScore = 0;
+            stressballTime = 30;
+            updateStressballStats();
+            document.getElementById('stressballStartBtn').disabled = false;
+            document.getElementById('stressballResetBtn').disabled = true;
         }
 
-        // Game 3: Breathing Exercise
-        let breathCount = 0;
-        let breathingStartTime = 0;
-        let breathingGameRunning = false;
-        let breathingInterval = null;
-        let isBreathingIn = true;
+        function updateStressballStats() {
+            document.getElementById('stressballScore').textContent = stressballScore;
+            document.getElementById('stressballTime').textContent = stressballTime;
+        }
 
-        function startBreathingGame() {
-            if (breathingGameRunning) return;
+        // Points and achievements system
+        function updatePoints(points) {
+            totalPoints += points;
+            localStorage.setItem('totalPoints', totalPoints);
+            document.querySelector('.achievement-points').textContent = totalPoints;
+
+            // Check for level up
+            const newLevel = Math.floor(totalPoints / POINTS_FOR_LEVEL_UP) + 1;
+            if (newLevel > currentLevel) {
+                levelUp(newLevel);
+            }
+        }
+
+        function levelUp(newLevel) {
+            currentLevel = newLevel;
+            localStorage.setItem('currentLevel', currentLevel);
+            const levelElement = document.querySelector('.achievement-level');
+            levelElement.textContent = `Level ${currentLevel}`;
+            levelElement.classList.add('level-up-animation');
+            setTimeout(() => levelElement.classList.remove('level-up-animation'), 500);
             
-            breathingGameRunning = true;
-            breathCount = 0;
-            breathingStartTime = Date.now();
+            // Show level up message
+            alert(`🎉 Congratulations! You've reached Level ${currentLevel}!`);
+        }
+
+        function updateStreak() {
+            const today = new Date().toDateString();
+            if (lastPlayDate !== today) {
+                if (lastPlayDate === new Date(Date.now() - 86400000).toDateString()) {
+                    dailyStreak++;
+                } else {
+                    dailyStreak = 1;
+                }
+                localStorage.setItem('dailyStreak', dailyStreak);
+                localStorage.setItem('lastPlayDate', today);
+                document.querySelector('.achievement-streak').textContent = dailyStreak;
+            }
+        }
+
+        // Modified game end functions
+        function endBalloonGame() {
+            clearInterval(balloonGameInterval);
+            document.getElementById('balloonStartBtn').disabled = false;
+            document.getElementById('balloonResetBtn').disabled = false;
             
-            document.getElementById('breathCount').textContent = breathCount;
-            document.getElementById('breathingStartBtn').disabled = true;
-            document.getElementById('breathingGameOver').style.display = 'none';
-            document.getElementById('breathingInstructions').textContent = 'Breathe in...';
+            const points = balloonScore * POINTS_PER_BALLOON;
+            updatePoints(points);
+            updateStreak();
             
-            startBreathingCycle();
+            // Update high score
+            const highScore = Math.max(balloonScore, parseInt(localStorage.getItem('balloonHighScore') || 0));
+            localStorage.setItem('balloonHighScore', highScore);
+            document.getElementById('balloonHighScore').textContent = highScore;
             
-            // Update session time
-            gameIntervals.breathing = setInterval(() => {
-                const elapsed = Math.floor((Date.now() - breathingStartTime) / 1000);
-                const minutes = Math.floor(elapsed / 60);
-                const seconds = elapsed % 60;
-                document.getElementById('breathingTime').textContent = 
-                    `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            alert(`Game Over! You popped ${balloonScore} balloons and earned ${points} points!`);
+        }
+
+        function endStressballGame() {
+            clearInterval(stressballGameInterval);
+            document.getElementById('stressballStartBtn').disabled = false;
+            document.getElementById('stressballResetBtn').disabled = false;
+            
+            const points = stressballScore * POINTS_PER_SQUEEZE;
+            updatePoints(points);
+            updateStreak();
+            
+            // Update high score
+            const highScore = Math.max(stressballScore, parseInt(localStorage.getItem('stressballHighScore') || 0));
+            localStorage.setItem('stressballHighScore', highScore);
+            document.getElementById('stressballHighScore').textContent = highScore;
+            
+            alert(`Time's up! You squeezed the ball ${stressballScore} times and earned ${points} points!`);
+        }
+
+        // Memory Game
+        let memoryCards = [];
+        let flippedCards = [];
+        let memoryMatches = 0;
+        let memoryMoves = 0;
+        let memoryTimer;
+        let memoryTime = 0;
+        const POINTS_PER_MATCH = 20;
+        const MEMORY_BONUS = 100;
+
+        function startMemoryGame() {
+            memoryMatches = 0;
+            memoryMoves = 0;
+            memoryTime = 0;
+            updateMemoryStats();
+            
+            const emojis = ['🌟', '🎈', '🎮', '🎯', '🎨', '🎭', '🎪', '🎫'];
+            memoryCards = [...emojis, ...emojis];
+            shuffleArray(memoryCards);
+            
+            const grid = document.querySelector('.memory-grid');
+            grid.innerHTML = '';
+            
+            memoryCards.forEach((emoji, index) => {
+                const card = document.createElement('div');
+                card.className = 'memory-card';
+                card.dataset.index = index;
+                card.innerHTML = `
+                    <div class="card-front">${emoji}</div>
+                    <div class="card-back"></div>
+                `;
+                card.addEventListener('click', flipCard);
+                grid.appendChild(card);
+            });
+            
+            document.getElementById('memoryStartBtn').disabled = true;
+            document.getElementById('memoryResetBtn').disabled = false;
+            
+            memoryTimer = setInterval(() => {
+                memoryTime++;
+                updateMemoryStats();
             }, 1000);
         }
 
-        function startBreathingCycle() {
-            const circle = document.getElementById('breathingCircle');
-            const instructions = document.getElementById('breathingInstructions');
-            const fill = document.getElementById('breathingFill');
+        function flipCard(e) {
+            const card = e.currentTarget;
+            if (flippedCards.length === 2 || card.classList.contains('flipped')) return;
             
-            // Breathe in (4 seconds)
-            isBreathingIn = true;
-            circle.classList.add('breathing-in');
-            circle.classList.remove('breathing-out');
-            instructions.textContent = 'Breathe in...';
+            card.classList.add('flipped');
+            flippedCards.push(card);
             
-            let breathProgress = 0;
-            const breathInInterval = setInterval(() => {
-                breathProgress += 2;
-                fill.style.width = breathProgress + '%';
+            if (flippedCards.length === 2) {
+                memoryMoves++;
+                updateMemoryStats();
                 
-                if (breathProgress >= 100) {
-                    clearInterval(breathInInterval);
-                    setTimeout(() => startBreathingOut(), 500);
-                }
-            }, 80);
-        }
-
-        function startBreathingOut() {
-            const circle = document.getElementById('breathingCircle');
-            const instructions = document.getElementById('breathingInstructions');
-            const fill = document.getElementById('breathingFill');
-            
-            // Breathe out (6 seconds)
-            isBreathingIn = false;
-            circle.classList.remove('breathing-in');
-            circle.classList.add('breathing-out');
-            instructions.textContent = 'Breathe out...';
-            
-            let breathProgress = 100;
-            const breathOutInterval = setInterval(() => {
-                breathProgress -= 2;
-                fill.style.width = breathProgress + '%';
+                const [card1, card2] = flippedCards;
+                const emoji1 = card1.querySelector('.card-front').textContent;
+                const emoji2 = card2.querySelector('.card-front').textContent;
                 
-                if (breathProgress <= 0) {
-                    clearInterval(breathOutInterval);
-                    breathCount++;
-                    document.getElementById('breathCount').textContent = breathCount;
+                if (emoji1 === emoji2) {
+                    memoryMatches++;
+                    updateMemoryStats();
+                    flippedCards.forEach(card => card.classList.add('matched'));
+                    flippedCards = [];
+                    updatePoints(POINTS_PER_MATCH);
                     
-                    // Continue breathing cycle
-                    setTimeout(() => startBreathingCycle(), 500);
+                    if (memoryMatches === memoryCards.length / 2) {
+                        endMemoryGame();
+                    }
+                } else {
+                    setTimeout(() => {
+                        flippedCards.forEach(card => card.classList.remove('flipped'));
+                        flippedCards = [];
+                    }, 1000);
                 }
-            }, 120);
+            }
         }
 
-        function endBreathingGame() {
-            breathingGameRunning = false;
-            clearInterval(gameIntervals.breathing);
+        function updateMemoryStats() {
+            document.getElementById('memoryMatches').textContent = memoryMatches;
+            document.getElementById('memoryMoves').textContent = memoryMoves;
+            document.getElementById('memoryTime').textContent = memoryTime;
+        }
+
+        function endMemoryGame() {
+            clearInterval(memoryTimer);
+            const bonus = Math.max(0, MEMORY_BONUS - (memoryMoves - memoryCards.length));
+            updatePoints(bonus);
+            alert(`Congratulations! You completed the game in ${memoryMoves} moves and earned ${bonus} bonus points!`);
+        }
+
+        function resetMemoryGame() {
+            clearInterval(memoryTimer);
+            document.querySelector('.memory-grid').innerHTML = '';
+            memoryMatches = 0;
+            memoryMoves = 0;
+            memoryTime = 0;
+            flippedCards = [];
+            updateMemoryStats();
+            document.getElementById('memoryStartBtn').disabled = false;
+            document.getElementById('memoryResetBtn').disabled = true;
+        }
+
+        // Breathing Exercise
+        let breathingCycles = 0;
+        let breathingTime = 300; // 5 minutes
+        let breathingTimer;
+        let breathingState = 'ready';
+        const POINTS_PER_CYCLE = 15;
+
+        function startBreathingExercise() {
+            document.getElementById('breathingStartBtn').disabled = true;
+            document.getElementById('breathingResetBtn').disabled = false;
             
-            const circle = document.getElementById('breathingCircle');
-            circle.classList.remove('breathing-in', 'breathing-out');
-            
-            const elapsed = Math.floor((Date.now() - breathingStartTime) / 1000);
-            const minutes = Math.floor(elapsed / 60);
-            const seconds = elapsed % 60;
-            
-            document.getElementById('breathingFinalScore').textContent = breathCount;
-            document.getElementById('breathingDuration').textContent = 
-                `${minutes}:${seconds.toString().padStart(2, '0')}`;
-            document.getElementById('breathingMessage').textContent = getBreathingMessage(breathCount);
-            document.getElementById('breathingGameOver').style.display = 'block';
+            breathingTimer = setInterval(() => {
+                if (breathingTime > 0) {
+                    breathingTime--;
+                    updateBreathingStats();
+                    
+                    const instruction = document.querySelector('.breathing-instruction');
+                    const circle = document.querySelector('.breathing-circle');
+                    
+                    if (breathingTime % 8 === 0) {
+                        instruction.textContent = 'Inhale';
+                        circle.classList.remove('breathing-exhale');
+                        circle.classList.add('breathing-inhale');
+                        breathingState = 'inhale';
+                    } else if (breathingTime % 8 === 4) {
+                        instruction.textContent = 'Exhale';
+                        circle.classList.remove('breathing-inhale');
+                        circle.classList.add('breathing-exhale');
+                        breathingState = 'exhale';
+                        
+                        if (breathingTime % 8 === 4) {
+                            breathingCycles++;
+                            updatePoints(POINTS_PER_CYCLE);
+                            updateBreathingStats();
+                        }
+                    }
+                } else {
+                    endBreathingExercise();
+                }
+            }, 1000);
+        }
+
+        function updateBreathingStats() {
+            document.getElementById('breathingCycles').textContent = breathingCycles;
+            const minutes = Math.floor(breathingTime / 60);
+            const seconds = breathingTime % 60;
+            document.getElementById('breathingTime').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            document.getElementById('totalBreathingTime').textContent = 
+                Math.round((300 - breathingTime) / 60 * 10) / 10;
+        }
+
+        function endBreathingExercise() {
+            clearInterval(breathingTimer);
+            const totalMinutes = Math.round((300 - breathingTime) / 60 * 10) / 10;
+            alert(`Great job! You completed ${breathingCycles} breathing cycles in ${totalMinutes} minutes!`);
+            updateStreak();
+        }
+
+        function resetBreathingExercise() {
+            clearInterval(breathingTimer);
+            breathingCycles = 0;
+            breathingTime = 300;
+            breathingState = 'ready';
+            updateBreathingStats();
             document.getElementById('breathingStartBtn').disabled = false;
+            document.getElementById('breathingResetBtn').disabled = true;
+            document.querySelector('.breathing-instruction').textContent = 'Get Ready';
+            document.querySelector('.breathing-circle').className = 'breathing-circle';
         }
 
-        function getBreathingMessage(count) {
-            if (count >= 10) return "🧘‍♀️ Excellent! You're a breathing master!";
-            if (count >= 7) return "🌟 Wonderful! Great stress relief session!";
-            if (count >= 5) return "👍 Good job! You're getting more relaxed!";
-            if (count >= 3) return "💪 Nice work! Keep practicing!";
-            return "😊 Good start! Every breath helps reduce stress!";
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
         }
 
-        // Initialize high scores
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('balloonHighScore').textContent = balloonHighScore;
-            document.getElementById('squeezeHighScore').textContent = squeezeHighScore;
+        // Load scores and achievements on page load
+        window.addEventListener('load', function() {
+            document.getElementById('balloonHighScore').textContent = localStorage.getItem('balloonHighScore') || 0;
+            document.getElementById('stressballHighScore').textContent = localStorage.getItem('stressballHighScore') || 0;
+            document.querySelector('.achievement-points').textContent = totalPoints;
+            document.querySelector('.achievement-level').textContent = `Level ${currentLevel}`;
+            document.querySelector('.achievement-streak').textContent = dailyStreak;
+            updateStreak();
         });
     </script>
 </body>

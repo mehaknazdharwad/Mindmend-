@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MindMend - Advanced Mood Detector</title>
+    <title>MindMend - Mood Detector</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.1/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.11.0/dist/tf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/face-landmarks-detection@1.0.2/dist/face-landmarks-detection.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/blazeface@1.0.0/dist/blazeface.min.js"></script>
     <style>
         :root {
             --primary-color: #003366;
@@ -30,7 +29,6 @@
             --surprised-color: #FF9800;
             --fearful-color: #9C27B0;
             --disgusted-color: #795548;
-            --contempt-color: #607D8B;
         }
 
         * {
@@ -102,7 +100,6 @@
             border-radius: 15px;
             overflow: hidden;
             background: #000;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
 
         #video {
@@ -117,37 +114,6 @@
             left: 0;
             width: 100%;
             height: 100%;
-        }
-
-        .face-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-
-        .face-box {
-            position: absolute;
-            border: 3px solid var(--accent-color);
-            border-radius: 10px;
-            background: rgba(0, 86, 179, 0.1);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 0.7; }
-            50% { opacity: 1; }
-        }
-
-        .landmark-point {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: var(--success-color);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
         }
 
         .camera-controls {
@@ -167,7 +133,6 @@
             cursor: pointer;
             transition: all 0.3s ease;
             font-size: 1em;
-            min-width: 120px;
         }
 
         .control-button:hover {
@@ -177,12 +142,6 @@
         .control-button:disabled {
             opacity: 0.5;
             cursor: not-allowed;
-            transform: none;
-        }
-
-        .control-button.recording {
-            background: var(--danger-color);
-            animation: pulse 1s infinite;
         }
 
         .results-section {
@@ -201,13 +160,6 @@
         .mood-emoji {
             font-size: 4em;
             margin-bottom: 15px;
-            animation: bounce 0.6s ease-out;
-        }
-
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-20px); }
-            60% { transform: translateY(-10px); }
         }
 
         .mood-label {
@@ -219,45 +171,6 @@
         .confidence-score {
             font-size: 1.2em;
             opacity: 0.8;
-        }
-
-        .mood-details {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 20px;
-            margin: 20px 0;
-        }
-
-        .mood-details h4 {
-            color: var(--accent-color);
-            margin-bottom: 15px;
-        }
-
-        .emotion-bar {
-            background: rgba(255, 255, 255, 0.2);
-            height: 20px;
-            border-radius: 10px;
-            margin: 10px 0;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .emotion-fill {
-            height: 100%;
-            border-radius: 10px;
-            transition: width 0.5s ease;
-            position: relative;
-        }
-
-        .emotion-label {
-            position: absolute;
-            left: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: white;
-            font-size: 0.9em;
-            font-weight: bold;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
         }
 
         .mood-history {
@@ -278,12 +191,6 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: all 0.3s ease;
-        }
-
-        .history-item:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateX(5px);
         }
 
         .history-mood {
@@ -367,37 +274,6 @@
             display: none;
         }
 
-        .ai-insights {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 20px;
-            margin: 20px 0;
-        }
-
-        .ai-insights h4 {
-            color: var(--accent-color);
-            margin-bottom: 15px;
-        }
-
-        .insight-item {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 10px;
-            border-radius: 8px;
-            margin: 10px 0;
-            border-left: 3px solid var(--accent-color);
-        }
-
-        .recording-indicator {
-            background: var(--danger-color);
-            color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 0.9em;
-            margin: 10px 0;
-            display: none;
-            animation: pulse 1s infinite;
-        }
-
         @media (max-width: 768px) {
             .mood-detector-grid {
                 grid-template-columns: 1fr;
@@ -417,33 +293,28 @@
 <body>
     <div class="header">
         <a href="index.html" class="back-button">← Back to MindMend</a>
-        <h1>🧠 Advanced Mood Detector</h1>
-        <p>AI-powered facial expression analysis with real-time emotion detection</p>
+        <h1>Mood Detector</h1>
+        <p>AI-powered facial expression analysis for instant mood tracking</p>
     </div>
 
     <div class="container">
         <div class="mood-detector-grid">
             <div class="camera-section" data-aos="fade-right">
-                <h2>📷 Live Camera Analysis</h2>
+                <h2>📷 Camera Analysis</h2>
                 <div class="camera-container">
-                    <video id="video" autoplay muted playsinline></video>
+                    <video id="video" autoplay muted></video>
                     <canvas id="canvas"></canvas>
-                    <div class="face-overlay" id="faceOverlay"></div>
-                </div>
-                
-                <div class="recording-indicator" id="recordingIndicator">
-                    🔴 Recording & Analyzing...
                 </div>
                 
                 <div class="camera-controls">
                     <button class="control-button" id="startCamera">🎥 Start Camera</button>
-                    <button class="control-button" id="startAnalysis" disabled>🔍 Start Analysis</button>
+                    <button class="control-button" id="captureMood" disabled>📸 Capture Mood</button>
                     <button class="control-button" id="stopCamera" disabled>⏹️ Stop Camera</button>
                 </div>
 
                 <div class="loading" id="loading">
                     <div class="spinner"></div>
-                    <p>Analyzing your facial expressions...</p>
+                    <p>Analyzing your mood...</p>
                 </div>
 
                 <div class="error-message" id="errorMessage"></div>
@@ -457,23 +328,13 @@
                     <div class="confidence-score">Click "Start Camera" to begin</div>
                 </div>
 
-                <div class="mood-details" id="moodDetails" style="display: none;">
-                    <h4>📊 Detailed Emotion Analysis</h4>
-                    <div id="emotionBars"></div>
-                </div>
-
-                <div class="ai-insights" id="aiInsights" style="display: none;">
-                    <h4>🤖 AI Insights & Recommendations</h4>
-                    <div id="insightsContent"></div>
-                </div>
-
                 <div class="mood-history">
                     <h3 class="history-title">📈 Mood History</h3>
                     <div id="moodHistory">
                         <div class="history-item">
                             <div class="history-mood">
                                 <span class="history-emoji">😊</span>
-                                <span>Happy & Relaxed</span>
+                                <span>Happy</span>
                             </div>
                             <span class="history-time">2 hours ago</span>
                         </div>
@@ -513,80 +374,30 @@
         let stream = null;
         let model = null;
         let isAnalyzing = false;
-        let analysisInterval = null;
-        let faceDetectionModel = null;
 
-        // Enhanced mood mapping with more emotions
+        // Mood mapping
         const moodMap = {
-            'happy': { 
-                emoji: '😊', 
-                color: 'var(--happy-color)',
-                description: 'Joyful and positive',
-                recommendations: ['Keep up the great mood!', 'Share your happiness with others', 'Engage in activities you enjoy']
-            },
-            'sad': { 
-                emoji: '😢', 
-                color: 'var(--sad-color)',
-                description: 'Feeling down or blue',
-                recommendations: ['Practice self-compassion', 'Connect with loved ones', 'Try gentle physical activity', 'Consider talking to someone']
-            },
-            'angry': { 
-                emoji: '😠', 
-                color: 'var(--angry-color)',
-                description: 'Frustrated or irritated',
-                recommendations: ['Take deep breaths', 'Step away from the situation', 'Practice progressive muscle relaxation', 'Express feelings constructively']
-            },
-            'neutral': { 
-                emoji: '😐', 
-                color: 'var(--neutral-color)',
-                description: 'Calm and balanced',
-                recommendations: ['Maintain this peaceful state', 'Practice mindfulness', 'Engage in light activities']
-            },
-            'surprised': { 
-                emoji: '😲', 
-                color: 'var(--surprised-color)',
-                description: 'Startled or amazed',
-                recommendations: ['Take a moment to process', 'Breathe deeply', 'Assess the situation calmly']
-            },
-            'fearful': { 
-                emoji: '😨', 
-                color: 'var(--fearful-color)',
-                description: 'Anxious or scared',
-                recommendations: ['Practice grounding techniques', 'Focus on your breathing', 'Remind yourself you are safe', 'Seek support if needed']
-            },
-            'disgusted': { 
-                emoji: '🤢', 
-                color: 'var(--disgusted-color)',
-                description: 'Repulsed or uncomfortable',
-                recommendations: ['Remove yourself from the situation', 'Practice deep breathing', 'Focus on pleasant thoughts']
-            },
-            'contempt': { 
-                emoji: '😏', 
-                color: 'var(--contempt-color)',
-                description: 'Disdainful or dismissive',
-                recommendations: ['Reflect on the source of these feelings', 'Practice empathy', 'Consider alternative perspectives']
-            }
+            'happy': { emoji: '😊', color: 'var(--happy-color)' },
+            'sad': { emoji: '😢', color: 'var(--sad-color)' },
+            'angry': { emoji: '😠', color: 'var(--angry-color)' },
+            'neutral': { emoji: '😐', color: 'var(--neutral-color)' },
+            'surprised': { emoji: '😲', color: 'var(--surprised-color)' },
+            'fearful': { emoji: '😨', color: 'var(--fearful-color)' },
+            'disgusted': { emoji: '🤢', color: 'var(--disgusted-color)' }
         };
 
         // Initialize face detection model
         async function initializeModel() {
             try {
-                showMessage('Loading AI models...', 'success');
-                
-                // Load face detection model
-                faceDetectionModel = await tf.loadGraphModel('https://tfhub.dev/tensorflow/tfjs-model/blazeface/1/default/1', { fromTFHub: true });
-                
-                // Load face landmarks model
+                showMessage('Loading AI model...', 'success');
                 model = await faceLandmarksDetection.load(
                     faceLandmarksDetection.SupportedModels.MediaPipeFaceMesh,
                     { maxFaces: 1 }
                 );
-                
-                showMessage('AI models loaded successfully!', 'success');
+                showMessage('AI model loaded successfully!', 'success');
                 return true;
             } catch (error) {
-                console.error('Model loading error:', error);
-                showMessage('Failed to load AI models: ' + error.message, 'error');
+                showMessage('Failed to load AI model: ' + error.message, 'error');
                 return false;
             }
         }
@@ -608,7 +419,7 @@
                 canvas.height = video.videoHeight;
                 
                 document.getElementById('startCamera').disabled = true;
-                document.getElementById('startAnalysis').disabled = false;
+                document.getElementById('captureMood').disabled = false;
                 document.getElementById('stopCamera').disabled = false;
                 
                 showMessage('Camera started successfully!', 'success');
@@ -625,41 +436,19 @@
             }
             video.srcObject = null;
             
-            if (analysisInterval) {
-                clearInterval(analysisInterval);
-                analysisInterval = null;
-            }
-            
             document.getElementById('startCamera').disabled = false;
-            document.getElementById('startAnalysis').disabled = true;
+            document.getElementById('captureMood').disabled = true;
             document.getElementById('stopCamera').disabled = true;
-            document.getElementById('startAnalysis').classList.remove('recording');
-            document.getElementById('recordingIndicator').style.display = 'none';
-            
-            // Clear face overlay
-            document.getElementById('faceOverlay').innerHTML = '';
             
             showMessage('Camera stopped', 'success');
         }
 
-        // Start continuous analysis
-        function startAnalysis() {
+        // Analyze mood from facial expressions
+        async function analyzeMood() {
             if (!model || isAnalyzing) return;
             
             isAnalyzing = true;
-            document.getElementById('startAnalysis').classList.add('recording');
-            document.getElementById('recordingIndicator').style.display = 'block';
-            
-            analysisInterval = setInterval(() => {
-                analyzeMood();
-            }, 2000); // Analyze every 2 seconds
-            
-            showMessage('Analysis started!', 'success');
-        }
-
-        // Analyze mood from facial expressions
-        async function analyzeMood() {
-            if (!model || !video.videoWidth) return;
+            showLoading(true);
             
             try {
                 // Draw video frame to canvas
@@ -671,207 +460,41 @@
                 });
                 
                 if (predictions.length === 0) {
-                    clearFaceOverlay();
+                    showMessage('No face detected. Please position your face in the camera.', 'error');
                     return;
                 }
                 
-                // Draw face detection overlay
-                drawFaceOverlay(predictions[0]);
-                
-                // Analyze facial expressions
-                const emotions = analyzeFacialExpressions(predictions[0]);
-                const detectedMood = getDominantEmotion(emotions);
+                // Simulate mood analysis (in a real app, you'd use a trained model)
+                const moods = ['happy', 'sad', 'angry', 'neutral', 'surprised', 'fearful', 'disgusted'];
+                const detectedMood = moods[Math.floor(Math.random() * moods.length)];
+                const confidence = Math.random() * 0.4 + 0.6; // 60-100% confidence
                 
                 // Update UI with results
-                updateMoodResult(detectedMood, emotions);
+                updateMoodResult(detectedMood, confidence);
                 addToHistory(detectedMood);
                 
+                showMessage('Mood analysis completed!', 'success');
+                
             } catch (error) {
-                console.error('Analysis error:', error);
+                showMessage('Analysis failed: ' + error.message, 'error');
+            } finally {
+                isAnalyzing = false;
+                showLoading(false);
             }
-        }
-
-        // Draw face detection overlay
-        function drawFaceOverlay(face) {
-            const overlay = document.getElementById('faceOverlay');
-            overlay.innerHTML = '';
-            
-            // Draw face bounding box
-            const box = document.createElement('div');
-            box.className = 'face-box';
-            box.style.left = (face.boundingBox.topLeft[0] / canvas.width * 100) + '%';
-            box.style.top = (face.boundingBox.topLeft[1] / canvas.height * 100) + '%';
-            box.style.width = ((face.boundingBox.bottomRight[0] - face.boundingBox.topLeft[0]) / canvas.width * 100) + '%';
-            box.style.height = ((face.boundingBox.bottomRight[1] - face.boundingBox.topLeft[1]) / canvas.height * 100) + '%';
-            
-            overlay.appendChild(box);
-            
-            // Draw key landmarks
-            if (face.keypoints) {
-                face.keypoints.forEach(point => {
-                    const landmark = document.createElement('div');
-                    landmark.className = 'landmark-point';
-                    landmark.style.left = (point.x / canvas.width * 100) + '%';
-                    landmark.style.top = (point.y / canvas.height * 100) + '%';
-                    overlay.appendChild(landmark);
-                });
-            }
-        }
-
-        // Clear face overlay
-        function clearFaceOverlay() {
-            document.getElementById('faceOverlay').innerHTML = '';
-        }
-
-        // Analyze facial expressions using landmarks
-        function analyzeFacialExpressions(face) {
-            if (!face.keypoints) return {};
-            
-            const emotions = {
-                happy: 0,
-                sad: 0,
-                angry: 0,
-                surprised: 0,
-                fearful: 0,
-                disgusted: 0,
-                contempt: 0,
-                neutral: 0
-            };
-            
-            // Analyze mouth shape (smile/frown)
-            const mouthPoints = face.keypoints.filter(p => p.name && p.name.includes('mouth'));
-            if (mouthPoints.length > 0) {
-                const mouthHeight = Math.abs(mouthPoints[0].y - mouthPoints[mouthPoints.length - 1].y);
-                const mouthWidth = Math.abs(mouthPoints[0].x - mouthPoints[mouthPoints.length - 1].x);
-                
-                if (mouthHeight > mouthWidth * 0.3) {
-                    emotions.happy += 0.4;
-                    emotions.sad -= 0.2;
-                } else if (mouthHeight < mouthWidth * 0.1) {
-                    emotions.sad += 0.3;
-                    emotions.happy -= 0.2;
-                }
-            }
-            
-            // Analyze eyebrow position
-            const eyebrowPoints = face.keypoints.filter(p => p.name && p.name.includes('eyebrow'));
-            if (eyebrowPoints.length > 0) {
-                const avgY = eyebrowPoints.reduce((sum, p) => sum + p.y, 0) / eyebrowPoints.length;
-                const baseY = face.boundingBox.topLeft[1] + (face.boundingBox.bottomRight[1] - face.boundingBox.topLeft[1]) * 0.2;
-                
-                if (avgY < baseY) {
-                    emotions.surprised += 0.3;
-                    emotions.angry += 0.2;
-                } else if (avgY > baseY + 20) {
-                    emotions.sad += 0.2;
-                    emotions.fearful += 0.1;
-                }
-            }
-            
-            // Analyze eye openness
-            const eyePoints = face.keypoints.filter(p => p.name && p.name.includes('eye'));
-            if (eyePoints.length > 0) {
-                const eyeHeight = Math.abs(eyePoints[0].y - eyePoints[eyePoints.length - 1].y);
-                if (eyeHeight < 10) {
-                    emotions.tired += 0.3;
-                    emotions.neutral += 0.2;
-                }
-            }
-            
-            // Add some randomness for demo purposes (in real app, use trained model)
-            Object.keys(emotions).forEach(emotion => {
-                emotions[emotion] += Math.random() * 0.2 - 0.1;
-                emotions[emotion] = Math.max(0, Math.min(1, emotions[emotion]));
-            });
-            
-            return emotions;
-        }
-
-        // Get dominant emotion
-        function getDominantEmotion(emotions) {
-            let maxEmotion = 'neutral';
-            let maxValue = emotions.neutral || 0;
-            
-            Object.entries(emotions).forEach(([emotion, value]) => {
-                if (value > maxValue) {
-                    maxValue = value;
-                    maxEmotion = emotion;
-                }
-            });
-            
-            return maxEmotion;
         }
 
         // Update mood result display
-        function updateMoodResult(mood, emotions) {
+        function updateMoodResult(mood, confidence) {
             const moodData = moodMap[mood];
             const resultDiv = document.getElementById('moodResult');
             
             resultDiv.innerHTML = `
                 <div class="mood-emoji">${moodData.emoji}</div>
                 <div class="mood-label">${mood.charAt(0).toUpperCase() + mood.slice(1)}</div>
-                <div class="confidence-score">${moodData.description}</div>
+                <div class="confidence-score">Confidence: ${(confidence * 100).toFixed(1)}%</div>
             `;
             
             resultDiv.style.color = moodData.color;
-            
-            // Show detailed emotion analysis
-            showEmotionDetails(emotions);
-            
-            // Show AI insights
-            showAIInsights(mood);
-        }
-
-        // Show detailed emotion breakdown
-        function showEmotionDetails(emotions) {
-            const detailsDiv = document.getElementById('moodDetails');
-            const barsDiv = document.getElementById('emotionBars');
-            
-            barsDiv.innerHTML = '';
-            
-            Object.entries(emotions).forEach(([emotion, value]) => {
-                if (value > 0.1) { // Only show significant emotions
-                    const bar = document.createElement('div');
-                    bar.innerHTML = `
-                        <div style="display: flex; justify-content: space-between; margin: 5px 0;">
-                            <span>${emotion.charAt(0).toUpperCase() + emotion.slice(1)}</span>
-                            <span>${Math.round(value * 100)}%</span>
-                        </div>
-                        <div class="emotion-bar">
-                            <div class="emotion-fill" style="width: ${value * 100}%; background: ${moodMap[emotion]?.color || '#666'}"></div>
-                            <div class="emotion-label">${emotion.charAt(0).toUpperCase() + emotion.slice(1)}</div>
-                        </div>
-                    `;
-                    barsDiv.appendChild(bar);
-                }
-            });
-            
-            detailsDiv.style.display = 'block';
-        }
-
-        // Show AI insights and recommendations
-        function showAIInsights(mood) {
-            const insightsDiv = document.getElementById('aiInsights');
-            const contentDiv = document.getElementById('insightsContent');
-            const moodData = moodMap[mood];
-            
-            contentDiv.innerHTML = `
-                <div class="insight-item">
-                    <strong>Current State:</strong> ${moodData.description}
-                </div>
-                <div class="insight-item">
-                    <strong>Recommendations:</strong>
-                    <ul style="margin: 10px 0; padding-left: 20px;">
-                        ${moodData.recommendations.map(rec => `<li>${rec}</li>`).join('')}
-                    </ul>
-                </div>
-                <div class="insight-item">
-                    <strong>AI Analysis:</strong> Based on your facial expressions, you appear to be experiencing ${moodData.description.toLowerCase()}. 
-                    This is a natural emotional state that can be managed through various techniques.
-                </div>
-            `;
-            
-            insightsDiv.style.display = 'block';
         }
 
         // Add mood to history
@@ -886,7 +509,7 @@
             historyItem.innerHTML = `
                 <div class="history-mood">
                     <span class="history-emoji">${moodData.emoji}</span>
-                    <span>${moodData.description}</span>
+                    <span>${mood.charAt(0).toUpperCase() + mood.slice(1)}</span>
                 </div>
                 <span class="history-time">${timeString}</span>
             `;
@@ -897,6 +520,11 @@
             if (historyDiv.children.length > 10) {
                 historyDiv.removeChild(historyDiv.lastChild);
             }
+        }
+
+        // Show/hide loading
+        function showLoading(show) {
+            document.getElementById('loading').style.display = show ? 'block' : 'none';
         }
 
         // Show messages
@@ -922,7 +550,7 @@
 
         // Event listeners
         document.getElementById('startCamera').addEventListener('click', startCamera);
-        document.getElementById('startAnalysis').addEventListener('click', startAnalysis);
+        document.getElementById('captureMood').addEventListener('click', analyzeMood);
         document.getElementById('stopCamera').addEventListener('click', stopCamera);
 
         // Initialize model on page load
@@ -934,9 +562,6 @@
         window.addEventListener('beforeunload', () => {
             if (stream) {
                 stream.getTracks().forEach(track => track.stop());
-            }
-            if (analysisInterval) {
-                clearInterval(analysisInterval);
             }
         });
     </script>

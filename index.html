@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mind-Mend - Mental Health Support System</title>
+    <title>MindMend - Mental Health Support System</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
@@ -58,9 +58,9 @@
         }
 
         .hero-title {
-            font-size: 3.5rem;
+            font-size: 4rem;
             font-weight: 700;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             background: linear-gradient(120deg, #ffffff, #e0e0e0);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -68,8 +68,8 @@
         }
 
         .hero-subtitle {
-            font-size: 1.3rem;
-            margin-bottom: 25px;
+            font-size: 1.5rem;
+            margin-bottom: 40px;
             opacity: 0.9;
         }
 
@@ -99,8 +99,8 @@
         .features-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-            padding: 40px 30px;
+            gap: 30px;
+            padding: 50px;
             position: relative;
             z-index: 1;
         }
@@ -109,7 +109,7 @@
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
             border-radius: 20px;
-            padding: 25px;
+            padding: 30px;
             text-align: center;
             transition: all 0.3s ease;
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -279,12 +279,12 @@
 
     <div class="wellness-points">
         <span class="points-icon">🌟</span>
-        <span>1,250 Mind-Mend Points</span>
+        <span>1,250 Wellness Points</span>
     </div>
 
     <header>
-        <h1 class="hero-title">Mind-Mend</h1>
-        <p class="hero-subtitle">Your Journey to Mental Well-being Starts Here</p>
+        <h1 class="hero-title">MindMend</h1>
+        <p class="hero-subtitle">Empowering Your Mental Well-being Journey</p>
     </header>
 
     <div class="features-grid">
@@ -335,11 +335,11 @@
         </div>
 
         <div class="feature-card" data-aos="fade-up" data-aos-delay="600">
-            <div class="gamification-badge">AI Powered!</div>
-            <div class="feature-icon">📷</div>
-            <h3 class="feature-title">Mood Detector</h3>
-            <p class="feature-description">AI-powered facial expression analysis for instant mood tracking</p>
-            <a href="mood_detector.html" class="action-button">Detect Mood</a>
+            <div class="gamification-badge">+75 pts/game</div>
+            <div class="feature-icon">🎮</div>
+            <h3 class="feature-title">Stress Booster Games</h3>
+            <p class="feature-description">Fun interactive games to boost your mood</p>
+            <a href="stress_booster_game.html" class="action-button">Play Now</a>
         </div>
     </div>
 
@@ -443,7 +443,7 @@
         function updatePoints(points) {
             wellnessPoints += points;
             document.querySelector('.wellness-points span:last-child').textContent = 
-                `${wellnessPoints} Mind-Mend Points`;
+                `${wellnessPoints} Wellness Points`;
         }
 
         // Add hover effect to feature cards

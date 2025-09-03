@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Peer Support Groups - Mind-Mend</title>
+    <title>Peer Support Groups | Mental Health Support System</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -19,15 +19,19 @@
             --glass-border: rgba(255, 255, 255, 0.1);
             --shadow-color: rgba(0, 0, 0, 0.1);
             --button-gradient: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
-            --success-color: #28a745;
-            --warning-color: #ffc107;
-            --danger-color: #dc3545;
+            --success-color: #4CAF50;
+            --warning-color: #FF9800;
+            --danger-color: #f44336;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
             font-family: 'Poppins', sans-serif;
-            margin: 0;
-            padding: 0;
             background: linear-gradient(135deg, #003366, #1b2735);
             color: #333;
             min-height: 100vh;
@@ -73,15 +77,51 @@
             padding: 0 20px;
         }
 
-        .groups-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            margin-bottom: 40px;
+        .search-section {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .search-box {
+            display: flex;
+            max-width: 500px;
+            margin: 0 auto;
+            gap: 10px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 12px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent-blue);
+        }
+
+        .search-btn {
+            background: var(--button-gradient);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
         .group-filter {
-            background: rgba(255, 255, 255, 0.95);
+            background: var(--card-bg);
             border-radius: 15px;
             padding: 20px;
             margin-bottom: 20px;
@@ -95,125 +135,190 @@
             background: #e0e7ff;
             color: #003366;
             border: none;
-            padding: 8px 15px;
-            border-radius: 20px;
+            padding: 10px 20px;
+            border-radius: 25px;
             cursor: pointer;
             transition: all 0.3s ease;
+            font-size: 14px;
         }
 
         .filter-button.active {
             background: #003366;
             color: white;
+            transform: scale(1.05);
         }
 
         .filter-button:hover {
             transform: scale(1.05);
         }
 
-        .progress-circle {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: conic-gradient(#003366 var(--progress), #e0e7ff 0deg);
-            margin: 10px auto;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .groups-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
         }
 
-        .progress-circle::after {
-            content: attr(data-progress);
+        .group-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .group-card::before {
+            content: '';
             position: absolute;
-            color: #003366;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--button-gradient);
+        }
+
+        .group-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .group-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .group-card h3 {
+            color: var(--primary-blue);
+            margin: 0;
+            font-size: 1.4em;
+        }
+
+        .member-count {
+            background: var(--button-gradient);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
             font-weight: bold;
+        }
+
+        .group-info {
+            margin: 15px 0;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .tags {
+            margin: 15px 0;
+        }
+
+        .tag {
+            display: inline-block;
+            background: #e0e7ff;
+            color: var(--primary-blue);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin: 3px;
+            font-weight: 500;
         }
 
         .group-stats {
             display: flex;
             justify-content: space-around;
-            margin: 15px 0;
-            font-size: 0.9em;
+            margin: 20px 0;
+            padding: 15px 0;
+            background: rgba(0, 86, 179, 0.05);
+            border-radius: 15px;
         }
 
         .stat-item {
             text-align: center;
         }
 
-        .next-session {
-            background: #e0e7ff;
-            color: #003366;
-            padding: 8px;
-            border-radius: 8px;
-            margin-top: 10px;
+        .progress-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: conic-gradient(var(--primary-blue) var(--progress), #e0e7ff 0deg);
+            margin: 10px auto;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--primary-blue);
+        }
+
+        .progress-circle::after {
+            content: attr(data-progress);
+            position: absolute;
+            color: var(--primary-blue);
+            font-weight: bold;
             font-size: 0.9em;
         }
 
         .facilitator {
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin: 10px 0;
+            gap: 12px;
+            margin: 15px 0;
+            padding: 15px;
+            background: rgba(0, 86, 179, 0.05);
+            border-radius: 12px;
         }
 
         .facilitator-img {
-            width: 30px;
-            height: 30px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            background: #003366;
+            background: var(--button-gradient);
             color: white;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
+            font-size: 1.1em;
         }
 
-        .group-card {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(10px);
-            transition: transform 0.3s ease;
-            position: relative;
+        .facilitator-info h4 {
+            margin: 0;
+            color: var(--primary-blue);
         }
 
-        .group-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .group-card h3 {
-            color: #003366;
-            margin-top: 0;
-        }
-
-        .group-info {
-            margin: 15px 0;
+        .facilitator-info small {
             color: #666;
         }
 
-        .tag {
-            display: inline-block;
+        .next-session {
             background: #e0e7ff;
-            color: #003366;
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 0.9em;
-            margin: 5px;
+            color: var(--primary-blue);
+            padding: 12px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-size: 0.95em;
+            text-align: center;
+            font-weight: 500;
         }
 
         .join-button {
-            background: linear-gradient(135deg, #003366, #1b2735);
+            background: var(--button-gradient);
             color: white;
-            padding: 12px 25px;
+            padding: 15px 30px;
             border: none;
             border-radius: 30px;
             cursor: pointer;
             width: 100%;
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(0, 51, 102, 0.2);
-            position: relative;
-            overflow: hidden;
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 15px;
         }
 
         .join-button:hover {
@@ -226,41 +331,84 @@
         }
 
         .upcoming-sessions {
-            background: rgba(255, 255, 255, 0.95);
+            background: var(--card-bg);
             border-radius: 15px;
-            padding: 20px;
+            padding: 25px;
             margin-bottom: 40px;
         }
 
         .session-card {
-            border-left: 4px solid #003366;
-            margin: 15px 0;
-            padding: 15px;
-            background: rgba(224, 231, 255, 0.2);
-            border-radius: 0 8px 8px 0;
+            border-left: 4px solid var(--primary-blue);
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(224, 231, 255, 0.3);
+            border-radius: 0 12px 12px 0;
+            transition: all 0.3s ease;
+        }
+
+        .session-card:hover {
+            background: rgba(224, 231, 255, 0.5);
+            transform: translateX(5px);
+        }
+
+        .session-time {
+            color: var(--primary-blue);
+            font-weight: 600;
+            font-size: 1.1em;
+            margin-bottom: 8px;
+        }
+
+        .session-card h3 {
+            color: var(--primary-blue);
+            margin: 8px 0;
+        }
+
+        .session-card p {
+            color: #555;
+            margin: 8px 0;
+            line-height: 1.5;
         }
 
         .create-group {
-            background: rgba(255, 255, 255, 0.95);
+            background: var(--card-bg);
             border-radius: 15px;
-            padding: 20px;
+            padding: 30px;
             text-align: center;
             margin-bottom: 40px;
+            border: 2px dashed var(--primary-blue);
+        }
+
+        .create-group h2 {
+            color: var(--primary-blue);
+            margin-bottom: 15px;
+        }
+
+        .create-group p {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.6;
         }
 
         .guidelines {
-            background: rgba(255, 255, 255, 0.95);
+            background: var(--card-bg);
             border-radius: 15px;
-            padding: 20px;
+            padding: 25px;
             margin-bottom: 40px;
         }
 
+        .guidelines h2 {
+            color: var(--primary-blue);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
         .guidelines ul {
-            padding-left: 20px;
+            padding-left: 25px;
+            line-height: 1.8;
         }
 
         .guidelines li {
-            margin: 10px 0;
+            margin: 12px 0;
             color: #444;
         }
 
@@ -279,167 +427,107 @@
 
         .modal-content {
             background: white;
-            padding: 30px;
-            border-radius: 15px;
-            max-width: 500px;
+            padding: 35px;
+            border-radius: 20px;
+            max-width: 550px;
             width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         .close-button {
             float: right;
             background: none;
             border: none;
-            font-size: 1.5em;
+            font-size: 1.8em;
             cursor: pointer;
+            color: #666;
+            transition: color 0.3s ease;
         }
 
-        .member-count {
-            background: #e0e7ff;
-            color: #003366;
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 0.9em;
-            float: right;
+        .close-button:hover {
+            color: var(--danger-color);
         }
 
-        .session-time {
-            color: #003366;
-            font-weight: 600;
+        .modal h2 {
+            color: var(--primary-blue);
+            margin-bottom: 20px;
+            margin-right: 30px;
         }
 
-        /* New Features */
-        .live-indicator {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            background: var(--danger-color);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 0.8em;
-            animation: pulse 2s infinite;
+        .form-group {
+            margin: 20px 0;
         }
 
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--primary-blue);
+            font-weight: 500;
         }
 
-        .group-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .action-btn {
-            padding: 8px 15px;
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.9em;
-            transition: all 0.3s ease;
-            flex: 1;
-        }
-
-        .btn-primary { background: var(--primary-blue); color: white; }
-        .btn-success { background: var(--success-color); color: white; }
-        .btn-warning { background: var(--warning-color); color: #333; }
-
-        .action-btn:hover {
-            transform: scale(1.05);
-        }
-
-        .chat-preview {
-            background: rgba(224, 231, 255, 0.3);
-            padding: 10px;
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
             border-radius: 8px;
-            margin-top: 10px;
-            font-size: 0.9em;
-            color: #666;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
         }
 
-        .chat-preview .last-message {
-            font-style: italic;
-            margin-top: 5px;
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: var(--accent-blue);
+            outline: none;
         }
 
-        .group-analytics {
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .checkbox-group {
             display: flex;
-            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
             margin: 15px 0;
-            font-size: 0.8em;
         }
 
-        .analytics-item {
-            text-align: center;
-            flex: 1;
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            margin: 0;
         }
 
-        .analytics-number {
-            font-size: 1.2em;
-            font-weight: bold;
-            color: var(--primary-blue);
-        }
-
-        .online-members {
-            background: var(--success-color);
-            color: white;
-            padding: 3px 8px;
+        .success-message {
+            background: rgba(76, 175, 80, 0.1);
+            border: 1px solid var(--success-color);
+            color: var(--success-color);
+            padding: 15px;
             border-radius: 10px;
-            font-size: 0.8em;
-            margin-left: 10px;
-        }
-
-        .group-status {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 0.8em;
-            font-weight: bold;
-        }
-
-        .status-active { background: #d4edda; color: #155724; }
-        .status-paused { background: #fff3cd; color: #856404; }
-        .status-full { background: #f8d7da; color: #721c24; }
-
-        .quick-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .stat-card {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 20px;
-            border-radius: 15px;
+            margin: 20px 0;
             text-align: center;
-            border-left: 4px solid var(--primary-blue);
-        }
-
-        .stat-number {
-            font-size: 2em;
-            font-weight: bold;
-            color: var(--primary-blue);
-        }
-
-        .stat-label {
-            color: #666;
-            margin-top: 5px;
+            display: none;
         }
 
         @media (max-width: 768px) {
             .groups-grid {
                 grid-template-columns: 1fr;
             }
-            .group-actions {
+            
+            .search-box {
                 flex-direction: column;
             }
-            .quick-stats {
-                grid-template-columns: 1fr 1fr;
+            
+            .group-filter {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .filter-button {
+                width: 200px;
             }
         }
     </style>
@@ -452,306 +540,290 @@
     </header>
 
     <div class="container">
-        <div class="quick-stats">
-            <div class="stat-card">
-                <div class="stat-number">12</div>
-                <div class="stat-label">Active Groups</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">156</div>
-                <div class="stat-label">Total Members</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">8</div>
-                <div class="stat-label">Live Sessions Today</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">94%</div>
-                <div class="stat-label">Member Satisfaction</div>
+        <div class="search-section" data-aos="fade-up">
+            <h2>Find Your Perfect Support Group</h2>
+            <div class="search-box">
+                <input type="text" class="search-input" id="searchInput" placeholder="Search for groups, topics, or facilitators...">
+                <button class="search-btn" onclick="searchGroups()">
+                    <i class="fas fa-search"></i> Search
+                </button>
             </div>
         </div>
 
-        <div class="group-filter">
+        <div class="group-filter" data-aos="fade-up" data-aos-delay="100">
             <button class="filter-button active" onclick="filterGroups('all')">All Groups</button>
             <button class="filter-button" onclick="filterGroups('academic')">Academic</button>
             <button class="filter-button" onclick="filterGroups('mental')">Mental Health</button>
             <button class="filter-button" onclick="filterGroups('social')">Social</button>
             <button class="filter-button" onclick="filterGroups('wellness')">Wellness</button>
             <button class="filter-button" onclick="filterGroups('career')">Career</button>
+            <button class="filter-button" onclick="filterGroups('lgbtq')">LGBTQ+</button>
+            <button class="filter-button" onclick="filterGroups('veterans')">Veterans</button>
         </div>
 
-        <div class="upcoming-sessions">
-            <h2>🎯 Live & Upcoming Sessions</h2>
+        <div class="upcoming-sessions" data-aos="fade-up" data-aos-delay="200">
+            <h2>🎯 Upcoming Sessions</h2>
             <div class="session-card">
-                <div class="live-indicator">🔴 LIVE NOW</div>
-                <span class="session-time">Today, 3:00 PM - 4:00 PM</span>
+                <div class="session-time">Today, 3:00 PM - 4:00 PM</div>
                 <h3>Stress Management for Students</h3>
-                <p>Join us for an interactive session on managing academic stress and maintaining work-life balance.</p>
-                <div class="group-analytics">
-                    <div class="analytics-item">
-                        <div class="analytics-number">24</div>
-                        <div>Participants</div>
-                    </div>
-                    <div class="analytics-item">
-                        <div class="analytics-number">45</div>
-                        <div>Minutes Left</div>
-                    </div>
-                    <div class="analytics-item">
-                        <div class="analytics-number">92%</div>
-                        <div>Engagement</div>
-                    </div>
-                </div>
-                <button class="join-button" onclick="joinLiveSession('Stress Management')">Join Live Session</button>
+                <p>Join us for an interactive session on managing academic stress and maintaining work-life balance. Learn practical techniques and connect with peers.</p>
+                <button class="join-button" onclick="showJoinModal('Stress Management')">Join Session</button>
             </div>
             <div class="session-card">
-                <span class="session-time">Tomorrow, 5:00 PM - 6:00 PM</span>
+                <div class="session-time">Tomorrow, 5:00 PM - 6:00 PM</div>
                 <h3>Mindfulness & Meditation</h3>
-                <p>Learn practical mindfulness techniques to stay focused and reduce anxiety.</p>
-                <div class="group-analytics">
-                    <div class="analytics-item">
-                        <div class="analytics-number">18</div>
-                        <div>Registered</div>
-                    </div>
-                    <div class="analytics-item">
-                        <div class="analytics-number">24h</div>
-                        <div>Until Start</div>
-                    </div>
-                    <div class="analytics-item">
-                        <div class="analytics-number">Max 25</div>
-                        <div>Capacity</div>
-                    </div>
-                </div>
-                <button class="join-button" onclick="showJoinModal('Mindfulness')">Register for Session</button>
+                <p>Learn practical mindfulness techniques to stay focused and reduce anxiety. Perfect for beginners and experienced practitioners alike.</p>
+                <button class="join-button" onclick="showJoinModal('Mindfulness')">Join Session</button>
+            </div>
+            <div class="session-card">
+                <div class="session-time">Friday, 6:00 PM - 7:00 PM</div>
+                <h3>Building Healthy Relationships</h3>
+                <p>Explore communication skills, boundaries, and emotional intelligence to build stronger, healthier relationships.</p>
+                <button class="join-button" onclick="showJoinModal('Relationships')">Join Session</button>
             </div>
         </div>
 
         <div class="groups-grid">
-            <div class="group-card" data-category="academic">
-                <div class="group-status status-active">Active</div>
-                <h3>Academic Stress Support</h3>
-                <span class="member-count">24 members <span class="online-members">8 online</span></span>
+            <div class="group-card" data-category="academic" data-aos="fade-up" data-aos-delay="300">
+                <div class="group-header">
+                    <h3>Academic Stress Support</h3>
+                    <span class="member-count">24 members</span>
+                </div>
                 <div class="group-info">
-                    <p>A safe space to discuss academic pressures and develop coping strategies together.</p>
+                    <p>A safe space to discuss academic pressures and develop coping strategies together. Perfect for students feeling overwhelmed by coursework.</p>
                     <div class="tags">
                         <span class="tag">Academic</span>
                         <span class="tag">Stress</span>
                         <span class="tag">Daily Support</span>
+                        <span class="tag">Study Skills</span>
                     </div>
                     <div class="group-stats">
                         <div class="stat-item">
-                            <div class="progress-circle" data-progress="85%"></div>
+                            <div class="progress-circle" data-progress="85%" style="--progress: 85%"></div>
                             <small>Active Rate</small>
                         </div>
                         <div class="stat-item">
-                            <div class="progress-circle" data-progress="92%"></div>
+                            <div class="progress-circle" data-progress="92%" style="--progress: 92%"></div>
                             <small>Satisfaction</small>
                         </div>
                     </div>
                     <div class="facilitator">
                         <div class="facilitator-img">DR</div>
-                        <div>
-                            <strong>Dr. Rachel Green</strong><br>
+                        <div class="facilitator-info">
+                            <h4>Dr. Rachel Green</h4>
                             <small>Educational Psychologist</small>
                         </div>
                     </div>
                     <div class="next-session">
                         Next Session: Today at 4:00 PM
                     </div>
-                    <div class="chat-preview">
-                        <strong>Recent Activity:</strong>
-                        <div class="last-message">"The breathing exercise really helped me during my exam!" - Anonymous</div>
-                    </div>
                 </div>
-                <div class="group-actions">
-                    <button class="action-btn btn-primary" onclick="showJoinModal('Academic')">Join Group</button>
-                    <button class="action-btn btn-success" onclick="viewGroupDetails('Academic')">View Details</button>
-                </div>
+                <button class="join-button" onclick="showJoinModal('Academic')">Join Group</button>
             </div>
 
-            <div class="group-card" data-category="mental">
-                <div class="group-status status-active">Active</div>
-                <h3>Anxiety Support Circle</h3>
-                <span class="member-count">31 members <span class="online-members">12 online</span></span>
+            <div class="group-card" data-category="mental" data-aos="fade-up" data-aos-delay="400">
+                <div class="group-header">
+                    <h3>Anxiety Support Circle</h3>
+                    <span class="member-count">31 members</span>
+                </div>
                 <div class="group-info">
-                    <p>Share experiences and learn techniques to manage anxiety with peers who understand.</p>
+                    <p>Share experiences and learn techniques to manage anxiety with peers who understand. Evidence-based strategies and peer support.</p>
                     <div class="tags">
                         <span class="tag">Anxiety</span>
                         <span class="tag">Weekly Meetings</span>
                         <span class="tag">Guided Support</span>
+                        <span class="tag">CBT Techniques</span>
                     </div>
                     <div class="group-stats">
                         <div class="stat-item">
-                            <div class="progress-circle" data-progress="88%"></div>
+                            <div class="progress-circle" data-progress="88%" style="--progress: 88%"></div>
                             <small>Active Rate</small>
                         </div>
                         <div class="stat-item">
-                            <div class="progress-circle" data-progress="95%"></div>
+                            <div class="progress-circle" data-progress="95%" style="--progress: 95%"></div>
                             <small>Satisfaction</small>
                         </div>
                     </div>
                     <div class="facilitator">
                         <div class="facilitator-img">SM</div>
-                        <div>
-                            <strong>Sarah Mitchell, LMHC</strong><br>
+                        <div class="facilitator-info">
+                            <h4>Sarah Mitchell, LMHC</h4>
                             <small>Mental Health Counselor</small>
                         </div>
                     </div>
                     <div class="next-session">
                         Next Session: Tomorrow at 5:00 PM
                     </div>
-                    <div class="chat-preview">
-                        <strong>Recent Activity:</strong>
-                        <div class="last-message">"The grounding techniques are amazing!" - Anonymous</div>
-                    </div>
                 </div>
-                <div class="group-actions">
-                    <button class="action-btn btn-primary" onclick="showJoinModal('Anxiety')">Join Group</button>
-                    <button class="action-btn btn-success" onclick="viewGroupDetails('Anxiety')">View Details</button>
-                </div>
+                <button class="join-button" onclick="showJoinModal('Anxiety')">Join Group</button>
             </div>
 
-            <div class="group-card" data-category="wellness">
-                <div class="group-status status-active">Active</div>
-                <h3>Mindfulness & Meditation</h3>
-                <span class="member-count">42 members <span class="online-members">15 online</span></span>
+            <div class="group-card" data-category="wellness" data-aos="fade-up" data-aos-delay="500">
+                <div class="group-header">
+                    <h3>Mindfulness & Meditation</h3>
+                    <span class="member-count">42 members</span>
+                </div>
                 <div class="group-info">
-                    <p>Practice mindfulness and meditation techniques together in a supportive environment.</p>
+                    <p>Practice mindfulness and meditation techniques together in a supportive environment. Guided sessions for all experience levels.</p>
                     <div class="tags">
                         <span class="tag">Meditation</span>
                         <span class="tag">Daily Practice</span>
                         <span class="tag">Guided Sessions</span>
+                        <span class="tag">Stress Relief</span>
                     </div>
                     <div class="group-stats">
                         <div class="stat-item">
-                            <div class="progress-circle" data-progress="90%"></div>
+                            <div class="progress-circle" data-progress="90%" style="--progress: 90%"></div>
                             <small>Active Rate</small>
                         </div>
                         <div class="stat-item">
-                            <div class="progress-circle" data-progress="98%"></div>
+                            <div class="progress-circle" data-progress="98%" style="--progress: 98%"></div>
                             <small>Satisfaction</small>
                         </div>
                     </div>
                     <div class="facilitator">
                         <div class="facilitator-img">AY</div>
-                        <div>
-                            <strong>Anika Yoga</strong><br>
+                        <div class="facilitator-info">
+                            <h4>Anika Yoga</h4>
                             <small>Certified Meditation Instructor</small>
                         </div>
                     </div>
                     <div class="next-session">
                         Next Session: Daily at 7:00 AM
                     </div>
-                    <div class="chat-preview">
-                        <strong>Recent Activity:</strong>
-                        <div class="last-message">"Morning meditation changed my entire day!" - Anonymous</div>
-                    </div>
                 </div>
-                <div class="group-actions">
-                    <button class="action-btn btn-primary" onclick="showJoinModal('Mindfulness')">Join Group</button>
-                    <button class="action-btn btn-success" onclick="viewGroupDetails('Mindfulness')">View Details</button>
-                </div>
+                <button class="join-button" onclick="showJoinModal('Mindfulness')">Join Group</button>
             </div>
 
-            <div class="group-card" data-category="social">
-                <div class="group-status status-paused">Paused</div>
-                <h3>Social Connection</h3>
-                <span class="member-count">28 members <span class="online-members">5 online</span></span>
+            <div class="group-card" data-category="social" data-aos="fade-up" data-aos-delay="600">
+                <div class="group-header">
+                    <h3>Social Connection</h3>
+                    <span class="member-count">28 members</span>
+                </div>
                 <div class="group-info">
-                    <p>Build meaningful connections and practice social skills in a friendly environment.</p>
+                    <p>Build meaningful connections and practice social skills in a friendly environment. Perfect for those looking to expand their social circle.</p>
                     <div class="tags">
                         <span class="tag">Social Skills</span>
                         <span class="tag">Friendship</span>
                         <span class="tag">Weekly Activities</span>
+                        <span class="tag">Community</span>
                     </div>
                     <div class="group-stats">
                         <div class="stat-item">
-                            <div class="progress-circle" data-progress="82%"></div>
+                            <div class="progress-circle" data-progress="82%" style="--progress: 82%"></div>
                             <small>Active Rate</small>
                         </div>
                         <div class="stat-item">
-                            <div class="progress-circle" data-progress="94%"></div>
+                            <div class="progress-circle" data-progress="94%" style="--progress: 94%"></div>
                             <small>Satisfaction</small>
                         </div>
                     </div>
                     <div class="facilitator">
                         <div class="facilitator-img">JP</div>
-                        <div>
-                            <strong>Dr. James Parker</strong><br>
+                        <div class="facilitator-info">
+                            <h4>Dr. James Parker</h4>
                             <small>Social Skills Coach</small>
                         </div>
                     </div>
                     <div class="next-session">
                         Next Session: Friday at 6:00 PM
                     </div>
-                    <div class="chat-preview">
-                        <strong>Recent Activity:</strong>
-                        <div class="last-message">"The icebreaker games were so fun!" - Anonymous</div>
-                    </div>
                 </div>
-                <div class="group-actions">
-                    <button class="action-btn btn-primary" onclick="showJoinModal('Social')">Join Group</button>
-                    <button class="action-btn btn-warning" onclick="viewGroupDetails('Social')">View Details</button>
-                </div>
+                <button class="join-button" onclick="showJoinModal('Social')">Join Group</button>
             </div>
             
-            <div class="group-card" data-category="career">
-                <div class="group-status status-full">Full</div>
-                <h3>Career Growth & Balance</h3>
-                <span class="member-count">35 members <span class="online-members">10 online</span></span>
+            <div class="group-card" data-category="career" data-aos="fade-up" data-aos-delay="700">
+                <div class="group-header">
+                    <h3>Career Growth & Balance</h3>
+                    <span class="member-count">35 members</span>
+                </div>
                 <div class="group-info">
-                    <p>Navigate career challenges while maintaining mental well-being and work-life balance.</p>
+                    <p>Navigate career challenges while maintaining mental well-being and work-life balance. Professional development and stress management.</p>
                     <div class="tags">
                         <span class="tag">Career</span>
                         <span class="tag">Stress Management</span>
                         <span class="tag">Professional Growth</span>
+                        <span class="tag">Work-Life Balance</span>
                     </div>
                     <div class="group-stats">
                         <div class="stat-item">
-                            <div class="progress-circle" data-progress="87%"></div>
+                            <div class="progress-circle" data-progress="87%" style="--progress: 87%"></div>
                             <small>Active Rate</small>
                         </div>
                         <div class="stat-item">
-                            <div class="progress-circle" data-progress="91%"></div>
+                            <div class="progress-circle" data-progress="91%" style="--progress: 91%"></div>
                             <small>Satisfaction</small>
                         </div>
                     </div>
                     <div class="facilitator">
                         <div class="facilitator-img">ML</div>
-                        <div>
-                            <strong>Maria Lopez</strong><br>
+                        <div class="facilitator-info">
+                            <h4>Maria Lopez</h4>
                             <small>Career Counselor</small>
                         </div>
                     </div>
                     <div class="next-session">
                         Next Session: Monday at 7:00 PM
                     </div>
-                    <div class="chat-preview">
-                        <strong>Recent Activity:</strong>
-                        <div class="last-message">"The resume workshop was incredibly helpful!" - Anonymous</div>
+                </div>
+                <button class="join-button" onclick="showJoinModal('Career')">Join Group</button>
+            </div>
+
+            <div class="group-card" data-category="lgbtq" data-aos="fade-up" data-aos-delay="800">
+                <div class="group-header">
+                    <h3>LGBTQ+ Support & Pride</h3>
+                    <span class="member-count">22 members</span>
+                </div>
+                <div class="group-info">
+                    <p>A safe and affirming space for LGBTQ+ individuals to share experiences, find community, and support each other's mental health journey.</p>
+                    <div class="tags">
+                        <span class="tag">LGBTQ+</span>
+                        <span class="tag">Community</span>
+                        <span class="tag">Safe Space</span>
+                        <span class="tag">Identity Support</span>
+                    </div>
+                    <div class="group-stats">
+                        <div class="stat-item">
+                            <div class="progress-circle" data-progress="93%" style="--progress: 93%"></div>
+                            <small>Active Rate</small>
+                        </div>
+                        <div class="stat-item">
+                            <div class="progress-circle" data-progress="96%" style="--progress: 96%"></div>
+                            <small>Satisfaction</small>
+                        </div>
+                    </div>
+                    <div class="facilitator">
+                        <div class="facilitator-img">AJ</div>
+                        <div class="facilitator-info">
+                            <h4>Alex Johnson</h4>
+                            <small>LGBTQ+ Mental Health Advocate</small>
+                        </div>
+                    </div>
+                    <div class="next-session">
+                        Next Session: Wednesday at 6:30 PM
                     </div>
                 </div>
-                <div class="group-actions">
-                    <button class="action-btn btn-warning" onclick="showWaitlistModal('Career')">Join Waitlist</button>
-                    <button class="action-btn btn-success" onclick="viewGroupDetails('Career')">View Details</button>
-                </div>
+                <button class="join-button" onclick="showJoinModal('LGBTQ+')">Join Group</button>
             </div>
         </div>
 
-        <div class="create-group">
-            <h2>🚀 Start Your Own Support Group</h2>
-            <p>Have an idea for a support group? We'll help you create and manage it!</p>
+        <div class="create-group" data-aos="fade-up">
+            <h2>💡 Start Your Own Support Group</h2>
+            <p>Have an idea for a support group? We'll help you create and manage it! Whether it's for a specific interest, challenge, or community, we provide the tools and support you need to make a difference.</p>
             <button class="join-button" onclick="showCreateGroupModal()">Create New Group</button>
         </div>
 
-        <div class="guidelines">
-            <h2>📋 Community Guidelines</h2>
+        <div class="guidelines" data-aos="fade-up">
+            <h2>🤝 Community Guidelines</h2>
             <ul>
-                <li>Respect privacy - what's shared in the group stays in the group</li>
-                <li>Be supportive and non-judgmental</li>
-                <li>Listen actively and share thoughtfully</li>
-                <li>Respect different perspectives and experiences</li>
-                <li>No hate speech or discriminatory behavior</li>
-                <li>Seek professional help when needed - peer support complements but doesn't replace professional help</li>
+                <li><strong>Respect privacy</strong> - What's shared in the group stays in the group</li>
+                <li><strong>Be supportive and non-judgmental</strong> - Everyone's journey is unique</li>
+                <li><strong>Listen actively and share thoughtfully</strong> - Give others space to be heard</li>
+                <li><strong>Respect different perspectives and experiences</strong></li>
+                <li><strong>No hate speech or discriminatory behavior</strong> - Zero tolerance for harmful language</li>
+                <li><strong>Seek professional help when needed</strong> - Peer support complements but doesn't replace professional help</li>
+                <li><strong>Be kind and compassionate</strong> - We're all here to support each other</li>
+                <li><strong>Report concerns</strong> - If you see something, say something</li>
             </ul>
         </div>
     </div>
@@ -762,18 +834,36 @@
             <button class="close-button" onclick="closeModal('joinModal')">&times;</button>
             <h2>Join Support Group</h2>
             <form id="joinForm" onsubmit="handleJoin(event)">
-                <div style="margin: 20px 0;">
-                    <label for="nickname">Choose a Nickname (Anonymous):</label><br>
-                    <input type="text" id="nickname" required style="width: 100%; padding: 8px; margin-top: 5px;">
+                <div class="form-group">
+                    <label for="nickname">Choose a Nickname (Anonymous):</label>
+                    <input type="text" id="nickname" required placeholder="Enter your preferred nickname">
                 </div>
-                <div style="margin: 20px 0;">
-                    <label>
-                        <input type="checkbox" required>
-                        I agree to follow the community guidelines and maintain confidentiality
-                    </label>
+                <div class="form-group">
+                    <label for="email">Email (for notifications):</label>
+                    <input type="email" id="email" placeholder="Optional - for meeting reminders">
+                </div>
+                <div class="form-group">
+                    <label for="experience">Experience Level:</label>
+                    <select id="experience" required>
+                        <option value="">Select your experience level</option>
+                        <option value="beginner">Beginner - New to this topic</option>
+                        <option value="intermediate">Intermediate - Some experience</option>
+                        <option value="advanced">Advanced - Experienced participant</option>
+                    </select>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="guidelines" required>
+                    <label for="guidelines">I agree to follow the community guidelines and maintain confidentiality</label>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="notifications">
+                    <label for="notifications">I'd like to receive notifications about upcoming sessions</label>
                 </div>
                 <button type="submit" class="join-button">Join Now</button>
             </form>
+            <div class="success-message" id="joinSuccess">
+                Successfully joined! You will receive an email with meeting details.
+            </div>
         </div>
     </div>
 
@@ -783,49 +873,64 @@
             <button class="close-button" onclick="closeModal('createGroupModal')">&times;</button>
             <h2>Create New Support Group</h2>
             <form id="createGroupForm" onsubmit="handleCreateGroup(event)">
-                <div style="margin: 20px 0;">
-                    <label for="groupName">Group Name:</label><br>
-                    <input type="text" id="groupName" required style="width: 100%; padding: 8px; margin-top: 5px;">
+                <div class="form-group">
+                    <label for="groupName">Group Name:</label>
+                    <input type="text" id="groupName" required placeholder="Enter a descriptive group name">
                 </div>
-                <div style="margin: 20px 0;">
-                    <label for="groupDescription">Description:</label><br>
-                    <textarea id="groupDescription" required style="width: 100%; padding: 8px; margin-top: 5px; height: 100px;"></textarea>
+                <div class="form-group">
+                    <label for="groupDescription">Description:</label>
+                    <textarea id="groupDescription" required placeholder="Describe what your group is about, who it's for, and what participants can expect"></textarea>
                 </div>
-                <div style="margin: 20px 0;">
-                    <label for="meetingFrequency">Meeting Frequency:</label><br>
-                    <select id="meetingFrequency" required style="width: 100%; padding: 8px; margin-top: 5px;">
+                <div class="form-group">
+                    <label for="meetingFrequency">Meeting Frequency:</label>
+                    <select id="meetingFrequency" required>
+                        <option value="">Select meeting frequency</option>
                         <option value="daily">Daily</option>
                         <option value="weekly">Weekly</option>
                         <option value="biweekly">Bi-weekly</option>
                         <option value="monthly">Monthly</option>
+                        <option value="as-needed">As needed</option>
                     </select>
+                </div>
+                <div class="form-group">
+                    <label for="groupCategory">Category:</label>
+                    <select id="groupCategory" required>
+                        <option value="">Select a category</option>
+                        <option value="academic">Academic</option>
+                        <option value="mental">Mental Health</option>
+                        <option value="social">Social</option>
+                        <option value="wellness">Wellness</option>
+                        <option value="career">Career</option>
+                        <option value="lgbtq">LGBTQ+</option>
+                        <option value="veterans">Veterans</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="facilitatorName">Your Name (as facilitator):</label>
+                    <input type="text" id="facilitatorName" required placeholder="Enter your full name">
+                </div>
+                <div class="form-group">
+                    <label for="facilitatorEmail">Your Email:</label>
+                    <input type="email" id="facilitatorEmail" required placeholder="Enter your email for group management">
                 </div>
                 <button type="submit" class="join-button">Create Group</button>
             </form>
+            <div class="success-message" id="createSuccess">
+                Group created successfully! We will review and publish it within 24 hours.
+            </div>
         </div>
     </div>
 
-    <!-- Waitlist Modal -->
-    <div id="waitlistModal" class="modal">
-        <div class="modal-content">
-            <button class="close-button" onclick="closeModal('waitlistModal')">&times;</button>
-            <h2>Join Waitlist</h2>
-            <p>This group is currently full, but you can join the waitlist to be notified when a spot opens up.</p>
-            <form id="waitlistForm" onsubmit="handleWaitlist(event)">
-                <div style="margin: 20px 0;">
-                    <label for="waitlistEmail">Email Address:</label><br>
-                    <input type="email" id="waitlistEmail" required style="width: 100%; padding: 8px; margin-top: 5px;">
-                </div>
-                <div style="margin: 20px 0;">
-                    <label for="waitlistNickname">Preferred Nickname:</label><br>
-                    <input type="text" id="waitlistNickname" required style="width: 100%; padding: 8px; margin-top: 5px;">
-                </div>
-                <button type="submit" class="join-button">Join Waitlist</button>
-            </form>
-        </div>
-    </div>
-
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100
+        });
+
         function filterGroups(category) {
             // Update active button
             document.querySelectorAll('.filter-button').forEach(btn => {
@@ -844,16 +949,31 @@
             });
         }
 
+        function searchGroups() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.group-card');
+            
+            cards.forEach(card => {
+                const title = card.querySelector('h3').textContent.toLowerCase();
+                const description = card.querySelector('.group-info p').textContent.toLowerCase();
+                const tags = Array.from(card.querySelectorAll('.tag')).map(tag => tag.textContent.toLowerCase());
+                
+                if (title.includes(searchTerm) || description.includes(searchTerm) || tags.some(tag => tag.includes(searchTerm))) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
         function showJoinModal(groupType) {
             document.getElementById('joinModal').style.display = 'flex';
+            document.getElementById('joinSuccess').style.display = 'none';
         }
 
         function showCreateGroupModal() {
             document.getElementById('createGroupModal').style.display = 'flex';
-        }
-
-        function showWaitlistModal(groupType) {
-            document.getElementById('waitlistModal').style.display = 'flex';
+            document.getElementById('createSuccess').style.display = 'none';
         }
 
         function closeModal(modalId) {
@@ -862,31 +982,47 @@
 
         function handleJoin(event) {
             event.preventDefault();
+            const nickname = document.getElementById('nickname').value;
+            const email = document.getElementById('email').value;
+            const experience = document.getElementById('experience').value;
+            
             // Here you would handle the join logic
-            alert('Successfully joined! You will receive an email with meeting details.');
-            closeModal('joinModal');
+            console.log('Joining group:', { nickname, email, experience });
+            
+            // Show success message
+            document.getElementById('joinSuccess').style.display = 'block';
+            
+            // Reset form
+            document.getElementById('joinForm').reset();
+            
+            // Close modal after 2 seconds
+            setTimeout(() => {
+                closeModal('joinModal');
+            }, 2000);
         }
 
         function handleCreateGroup(event) {
             event.preventDefault();
+            const groupName = document.getElementById('groupName').value;
+            const description = document.getElementById('groupDescription').value;
+            const frequency = document.getElementById('meetingFrequency').value;
+            const category = document.getElementById('groupCategory').value;
+            const facilitatorName = document.getElementById('facilitatorName').value;
+            const facilitatorEmail = document.getElementById('facilitatorEmail').value;
+            
             // Here you would handle the group creation logic
-            alert('Group created successfully! We will review and publish it within 24 hours.');
-            closeModal('createGroupModal');
-        }
-
-        function handleWaitlist(event) {
-            event.preventDefault();
-            // Here you would handle the waitlist logic
-            alert('Successfully joined waitlist! You will be notified when a spot opens up.');
-            closeModal('waitlistModal');
-        }
-
-        function joinLiveSession(sessionName) {
-            alert('Joining live session: ' + sessionName + '\n\nThis would open the live video/chat interface.');
-        }
-
-        function viewGroupDetails(groupName) {
-            alert('Viewing details for: ' + groupName + '\n\nThis would show comprehensive group information, member list, and activity history.');
+            console.log('Creating group:', { groupName, description, frequency, category, facilitatorName, facilitatorEmail });
+            
+            // Show success message
+            document.getElementById('createSuccess').style.display = 'block';
+            
+            // Reset form
+            document.getElementById('createGroupForm').reset();
+            
+            // Close modal after 2 seconds
+            setTimeout(() => {
+                closeModal('createGroupModal');
+            }, 2000);
         }
 
         // Close modals when clicking outside
@@ -896,11 +1032,11 @@
             }
         }
 
-        // Initialize AOS
-        AOS.init({
-            duration: 800,
-            once: true,
-            offset: 100
+        // Search functionality on Enter key
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchGroups();
+            }
         });
     </script>
 </body>
