@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - MindMend Institution</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #003366;
+            --secondary-color: #1b2735;
+            --accent-color: #0056b3;
+            --text-light: #ffffff;
+            --text-dark: #333333;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --shadow-color: rgba(0, 0, 0, 0.2);
+            --button-gradient: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            --error-color: #f44336;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: var(--button-gradient);
+            min-height: 100vh;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(0, 86, 179, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(0, 38, 77, 0.15) 0%, transparent 40%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .logo {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            backdrop-filter: blur(5px);
+            border: 1px solid var(--glass-border);
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            width: 400px;
+            color: var(--text-dark);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+        }
+
+        .login-header {
+            background: var(--primary-color);
+            color: var(--text-light);
+            padding: 1.5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 100%);
+            pointer-events: none;
+        }
+
+        .login-header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .login-header p {
+            margin: 0.5rem 0 0;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .login-body {
+            padding: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 0.8rem 1rem 0.8rem 3rem;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .input-group input:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.15);
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-color);
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 0.8rem;
+            background: var(--button-gradient);
+            color: var(--text-light);
+            border: none;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .login-button:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .login-footer {
+            padding: 0 2rem 1.5rem;
+            text-align: center;
+            color: var(--text-dark);
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        .login-footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .login-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .remember-me input {
+            margin: 0;
+        }
+
+        .error-message {
+            color: var(--error-color);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+        
+        .login-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .login-button {
+            flex: 1;
+        }
+        
+        .emotion-button {
+            width: 50px;
+            background: var(--accent-color);
+            color: var(--text-light);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .emotion-button:hover {
+            background: var(--primary-color);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .emotion-feedback {
+            margin-top: 1rem;
+            padding: 0.5rem;
+            background: rgba(0, 51, 102, 0.1);
+            border-radius: 8px;
+            color: var(--text-dark);
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        
+        .emotion-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .emotion-content {
+            background: white;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            overflow: hidden;
+        }
+        
+        .emotion-header {
+            background: var(--primary-color);
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .emotion-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .emotion-body {
+            padding: 1.5rem;
+            color: var(--text-dark);
+        }
+        
+        .camera-container {
+            width: 100%;
+            height: 300px;
+            background: #f0f0f0;
+            margin: 1rem 0;
+            overflow: hidden;
+            position: relative;
+            border-radius: 8px;
+        }
+        
+        #emotion-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .emotion-result {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(0, 86, 179, 0.1);
+            border-left: 4px solid var(--accent-color);
+            border-radius: 4px;
+            display: none;
+        }
+        
+        .scan-button {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            display: block;
+            margin: 1rem auto 0;
+            font-family: inherit;
+            font-weight: 600;
+        }
+
+        @media (max-width: 480px) {
+            .login-card {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles-js"></div>
+
+    <div class="logo">
+        <div class="logo-icon">
+            <i class="fas fa-brain"></i>
+        </div>
+        <div class="logo-text">MindMend</div>
+    </div>
+
+    <div class="login-card">
+        <div class="login-header">
+            <h1>Institutional Login</h1>
+            <p>Access dashboard for administrators and staff</p>
+        </div>
+        <div class="login-body">
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <div class="input-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                    </div>
+                    <div class="error-message" id="error-message">
+                        Incorrect email or password. Please try again.
+                    </div>
+                </div>
+
+                <div class="login-options">
+                    <div class="remember-me">
+                        <input type="checkbox" id="remember" name="remember">
+                        <label for="remember">Remember me</label>
+                    </div>
+                    <a href="#">Forgot password?</a>
+                </div>
+
+                <div class="form-group" style="margin-top: 1.5rem;">
+                    <div class="login-buttons">
+                        <button type="submit" class="login-button">Login</button>
+                        <button type="button" id="emotion-detect-btn" class="emotion-button" title="Detect Emotion">
+                            <i class="fas fa-camera"></i>
+                        </button>
+                    </div>
+                    <div class="emotion-feedback" id="emotion-feedback" style="display: none;">
+                        <i class="fas fa-spinner fa-spin" id="emotion-loading" style="margin-right: 8px;"></i>
+                        <span id="emotion-text">Analyzing emotional state...</span>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="login-footer">
+            <p>Need access? <a href="#">Contact your administrator</a></p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.13.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/blazeface@0.0.7"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/face-landmarks-detection@0.0.3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/deepface-js@0.0.4/dist/deepface.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize particles
+            particlesJS('particles-js', {
+                particles: {
+                    number: { value: 60, density: { enable: true, value_area: 800 } },
+                    color: { value: '#ffffff' },
+                    shape: { type: 'circle' },
+                    opacity: { value: 0.3, random: false },
+                    size: { value: 3, random: true },
+                    line_linked: {
+                        enable: true,
+                        distance: 150,
+                        color: '#ffffff',
+                        opacity: 0.2,
+                        width: 1
+                    },
+                    move: {
+                        enable: true,
+                        speed: 1.5,
+                        direction: 'none',
+                        random: false,
+                        straight: false,
+                        out_mode: 'out',
+                        bounce: false
+                    }
+                },
+                interactivity: {
+                    detect_on: 'canvas',
+                    events: {
+                        onhover: { enable: true, mode: 'repulse' },
+                        onclick: { enable: true, mode: 'push' },
+                        resize: true
+                    }
+                },
+                retina_detect: true
+            });
+
+            // Form submission
+            const loginForm = document.getElementById('login-form');
+            const errorMessage = document.getElementById('error-message');
+
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                
+                // For demo purposes, let's use a simple check
+                // In a real application, this would be a server request
+                if (email === 'admin@mindmend.com' && password === 'admin123') {
+                    // Store login information in sessionStorage
+                    sessionStorage.setItem('isLoggedIn', 'true');
+                    sessionStorage.setItem('userEmail', email);
+                    sessionStorage.setItem('userRole', 'Administrator');
+                    
+                    // If we have detected emotion, store it as well
+                    if (sessionStorage.getItem('userEmotion')) {
+                        // Already stored from camera detection
+                    } else {
+                        // Default if not detected
+                        sessionStorage.setItem('userEmotion', 'neutral');
+                    }
+                    
+                    // Redirect to dashboard on successful login
+                    window.location.href = 'institutional_dashboard.html';
+                } else {
+                    // Show error message
+                    errorMessage.style.display = 'block';
+                    
+                    // Reset the error message after 3 seconds
+                    setTimeout(() => {
+                        errorMessage.style.display = 'none';
+                    }, 3000);
+                }
+            });
+            
+            // Emotion Detection Feature
+            const emotionDetectBtn = document.getElementById('emotion-detect-btn');
+            const emotionFeedback = document.getElementById('emotion-feedback');
+            
+            emotionDetectBtn.addEventListener('click', function() {
+                openEmotionDetector();
+            });
+            
+            function openEmotionDetector() {
+                // Create emotion detection modal
+                const modal = document.createElement('div');
+                modal.className = 'emotion-modal';
+                modal.innerHTML = `
+                    <div class="emotion-content">
+                        <div class="emotion-header">
+                            <h3>Emotion Detection</h3>
+                            <button class="emotion-close">&times;</button>
+                        </div>
+                        <div class="emotion-body">
+                            <p>We can personalize your experience based on how you're feeling. Allow camera access to detect your emotional state.</p>
+                            <div class="camera-container">
+                                <video id="emotion-video" playsinline autoplay></video>
+                            </div>
+                            <div class="emotion-result" id="emotion-result">
+                                <div id="detected-emotion"></div>
+                                <div id="emotion-recommendation"></div>
+                            </div>
+                            <button class="scan-button" id="scan-button">Start Scan</button>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(modal);
+                
+                const closeBtn = modal.querySelector('.emotion-close');
+                const scanButton = document.getElementById('scan-button');
+                const video = document.getElementById('emotion-video');
+                const emotionResult = document.getElementById('emotion-result');
+                const detectedEmotion = document.getElementById('detected-emotion');
+                const emotionRecommendation = document.getElementById('emotion-recommendation');
+                let stream = null;
+                
+                // Close modal
+                closeBtn.addEventListener('click', function() {
+                    if (stream) {
+                        stream.getTracks().forEach(track => track.stop());
+                    }
+                    modal.remove();
+                });
+                
+                // Start camera and emotion detection
+                scanButton.addEventListener('click', async function() {
+                    try {
+                        if (scanButton.textContent === 'Start Scan') {
+                            // Load models first
+                            await createModelsDir();
+                            const modelsLoaded = await loadModels();
+                            
+                            if (!modelsLoaded) {
+                                return; // Stop if models couldn't be loaded
+                            }
+                            
+                            // Start camera
+                            stream = await navigator.mediaDevices.getUserMedia({ 
+                                video: { facingMode: 'user' } 
+                            });
+                            video.srcObject = stream;
+                            
+                            scanButton.textContent = 'Analyzing...';
+                            scanButton.disabled = true;
+                            
+                            // Wait for video to start playing to ensure it's ready for detection
+                            video.onloadedmetadata = function() {
+                                // Start real emotion detection after a brief delay to ensure video is playing
+                                setTimeout(detectEmotion, 2000);
+                            };
+                        } else if (scanButton.textContent === 'Scan Again') {
+                            // Reset for another scan
+                            emotionResult.style.display = 'none';
+                            scanButton.textContent = 'Analyzing...';
+                            scanButton.disabled = true;
+                            
+                            // Start another detection
+                            setTimeout(detectEmotion, 1000);
+                        }
+                    } catch (err) {
+                        alert('Camera access is required for emotion detection.');
+                        console.error('Error accessing camera:', err);
+                        
+                        // Update UI to show error
+                        scanButton.disabled = false;
+                        scanButton.textContent = 'Start Scan';
+                    }
+                });
+                
+                // Load DeepFace and BlazeFace models
+                async function loadModels() {
+                    try {
+                        // Add loading indicator
+                        detectedEmotion.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading advanced AI detection models...';
+                        
+                        // Load the BlazeFace model for face detection (faster than other models)
+                        window.blazeFaceModel = await blazeface.load();
+                        
+                        // Load facial landmark detection model
+                        window.faceLandmarkModel = await faceLandmarksDetection.load(
+                            faceLandmarksDetection.SupportedPackages.mediapipeFacemesh
+                        );
+                        
+                        // DeepFace is loaded via CDN and automatically initialized
+                        
+                        detectedEmotion.innerHTML = 'Advanced AI models loaded successfully. Ready to scan.';
+                        return true;
+                    } catch (error) {
+                        console.error('Error loading detection models:', error);
+                        detectedEmotion.innerHTML = 'Error loading AI models. Please try again later.';
+                        return false;
+                    }
+                }
+                
+                // Preload models (optional)
+                async function preloadModels() {
+                    try {
+                        // This function can be called earlier in the page lifecycle to start loading models
+                        // before user clicks the emotion detection button
+                        console.log('Preloading AI models for faster startup...');
+                    } catch (e) {
+                        console.log('Preloading skipped, will load on demand');
+                    }
+                }
+
+                // Advanced emotion detection using DeepFace and BlazeFace
+                async function detectEmotion() {
+                    const video = document.getElementById('emotion-video');
+                    
+                    try {
+                        // Check if models are loaded, if not load them
+                        if (!window.blazeFaceModel) {
+                            await loadModels();
+                        }
+                        
+                        // Display processing message
+                        detectedEmotion.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing facial expression...';
+                        
+                        // Create a canvas to capture the current frame from video
+                        const canvas = document.createElement('canvas');
+                        canvas.width = video.videoWidth;
+                        canvas.height = video.videoHeight;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                        
+                        // First, detect face using BlazeFace (faster detection)
+                        const blazeFaceDetections = await window.blazeFaceModel.estimateFaces(video, false);
+                        
+                        if (blazeFaceDetections && blazeFaceDetections.length > 0) {
+                            // Get face rectangle for DeepFace
+                            const faceBox = {
+                                x: Math.round(blazeFaceDetections[0].topLeft[0]),
+                                y: Math.round(blazeFaceDetections[0].topLeft[1]),
+                                width: Math.round(blazeFaceDetections[0].bottomRight[0] - blazeFaceDetections[0].topLeft[0]),
+                                height: Math.round(blazeFaceDetections[0].bottomRight[1] - blazeFaceDetections[0].topLeft[1])
+                            };
+                            
+                            // Get landmarks for more accurate analysis (optional)
+                            const faceLandmarks = await window.faceLandmarkModel.estimateFaces({
+                                input: video
+                            });
+                            
+                            // Process with DeepFace for emotion detection
+                            const deepFaceResult = await deepface.analyze(canvas.toDataURL(), {
+                                actions: ['emotion']
+                            });
+                            
+                            // Extract emotion data
+                            const emotions = deepFaceResult.emotion;
+                            
+                            // Find the dominant emotion
+                            let dominantEmotion = '';
+                            let highestScore = 0;
+                            
+                            for (const [emotion, score] of Object.entries(emotions)) {
+                                if (score > highestScore) {
+                                    highestScore = score;
+                                    dominantEmotion = emotion;
+                                }
+                            }
+                            
+                            // Enhanced emotion mapping with DeepFace's more accurate analysis
+                            let detectedEmotion = dominantEmotion.charAt(0).toUpperCase() + dominantEmotion.slice(1);
+                            const confidencePercent = Math.round(highestScore * 100);
+                            
+                            // Enhance detection by considering intensity ratios
+                            // (DeepFace provides more nuanced emotion detection)
+                            const enhancedEmotion = enhanceEmotionDetection(emotions);
+                            if (enhancedEmotion) {
+                                detectedEmotion = enhancedEmotion;
+                            }
+                            
+                            // Display result with high precision emotion detection
+                            document.getElementById('detected-emotion').innerHTML = 
+                                `<strong>Detected Emotion:</strong> ${detectedEmotion} <small>(${confidencePercent}% confidence)</small>
+                                <div style="font-size: 0.8em; margin-top: 5px;">
+                                    <span style="color: #4caf50;">Happy: ${Math.round(emotions.happy)}%</span> | 
+                                    <span style="color: #2196f3;">Sad: ${Math.round(emotions.sad)}%</span> | 
+                                    <span style="color: #f44336;">Angry: ${Math.round(emotions.angry)}%</span>
+                                </div>`;
+                            
+                            // Custom recommendations based on emotion with enhanced insights
+                            let recommendation = '';
+                            let supportClass = '';
+                            
+                            switch(detectedEmotion.toLowerCase()) {
+                                case 'happy':
+                                    recommendation = "You seem to be in a good mood! We'll provide resources to maintain your positive state and suggest activities to enhance your well-being.";
+                                    supportClass = 'positive-emotion';
+                                    break;
+                                case 'sad':
+                                    recommendation = "We notice you might be feeling down. Our dashboard will prioritize mood-lifting resources and supportive content specifically designed for sadness.";
+                                    supportClass = 'negative-emotion';
+                                    break;
+                                case 'fear':
+                                case 'anxious':
+                                    recommendation = "You appear to be experiencing some anxiety. We'll suggest evidence-based relaxation techniques and calming exercises when you log in.";
+                                    supportClass = 'negative-emotion';
+                                    break;
+                                case 'angry':
+                                    recommendation = "We detect signs of frustration. Your dashboard will include anger management resources and stress-reduction techniques tailored to your needs.";
+                                    supportClass = 'negative-emotion';
+                                    break;
+                                case 'surprise':
+                                case 'surprised':
+                                    recommendation = "You seem surprised! We'll provide you with grounding resources to help process unexpected emotions and regain focus.";
+                                    supportClass = 'neutral-emotion';
+                                    break;
+                                case 'disgust':
+                                case 'disgusted':
+                                    recommendation = "You appear to be experiencing aversion. We'll provide mindfulness techniques that can help process these emotions constructively.";
+                                    supportClass = 'negative-emotion';
+                                    break;
+                                case 'neutral':
+                                    recommendation = "Your expression appears balanced. We'll provide a well-rounded selection of resources to maintain your emotional equilibrium.";
+                                    supportClass = 'neutral-emotion';
+                                    break;
+                                default:
+                                    recommendation = "Thank you for using our advanced emotion detection. Your experience will be personalized based on your current emotional state.";
+                                    supportClass = 'neutral-emotion';
+                            }
+                            
+                            document.getElementById('emotion-recommendation').textContent = recommendation;
+                            emotionResult.style.display = 'block';
+                            
+                            // Update the emotion feedback under login button with enhanced display
+                            emotionFeedback.innerHTML = `
+                                <i class="fas fa-check-circle"></i> 
+                                Emotion detected: <strong>${detectedEmotion}</strong>
+                                <small>(${confidencePercent}%)</small>
+                            `;
+                            emotionFeedback.style.display = 'block';
+                            emotionFeedback.className = `emotion-feedback ${supportClass}`;
+                            
+                            // Store detailed emotion data in session storage
+                            sessionStorage.setItem('userEmotion', detectedEmotion.toLowerCase());
+                            sessionStorage.setItem('emotionData', JSON.stringify(emotions));
+                        } else {
+                            // No face detected
+                            document.getElementById('detected-emotion').innerHTML = 
+                                '<strong>No face detected</strong>. Please ensure your face is clearly visible to the camera and well-lit.';
+                        }
+                    } catch (error) {
+                        console.error('Error during emotion detection:', error);
+                        document.getElementById('detected-emotion').innerHTML = 
+                            '<strong>Error during detection</strong>. Please try again or check if your camera is properly working.';
+                    }
+                    
+                    // Enable scan button again
+                    scanButton.disabled = false;
+                    scanButton.textContent = 'Scan Again';
+                }
+                
+                // Enhanced emotion detection function that considers multiple emotional signals
+                function enhanceEmotionDetection(emotions) {
+                    // Refine emotion detection with specialized heuristics
+                    
+                    // Check for mixed emotional states
+                    if (emotions.happy > 30 && emotions.surprise > 30) {
+                        return "Excited"; // Happy + Surprise = Excitement
+                    }
+                    
+                    if (emotions.sad > 30 && emotions.angry > 30) {
+                        return "Frustrated"; // Sad + Angry = Frustration
+                    }
+                    
+                    if (emotions.angry > 50 && emotions.disgust > 20) {
+                        return "Contempt"; // Strong anger + disgust can indicate contempt
+                    }
+                    
+                    if (emotions.sad > 40 && emotions.fear > 25) {
+                        return "Anxious"; // Sadness + fear often indicates anxiety
+                    }
+                    
+                    if (emotions.neutral > 80) {
+                        return "Calm"; // Very high neutral can be interpreted as calmness
+                    }
+                    
+                    if (emotions.happy > 60) {
+                        return "Very Happy"; // Emphasize high happiness
+                    }
+                    
+                    if (emotions.sad > 60) {
+                        return "Very Sad"; // Emphasize high sadness
+                    }
+                    
+                    if (emotions.angry > 60) {
+                        return "Very Angry"; // Emphasize high anger
+                    }
+                    
+                    // If no special case detected, return null to use the default emotion
+                    return null;
+                }
+            }
+        });
+    </script>
+</body>
+</html>

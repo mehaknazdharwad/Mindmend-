@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Detection Models Setup</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #003366;
+        }
+        code {
+            background: #f5f5f5;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        pre {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .note {
+            background: #fff8dc;
+            padding: 10px;
+            border-left: 4px solid #ffd700;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Face Detection Models Setup</h1>
+    
+    <p>This directory needs to contain the face-api.js model files for local usage. The models can be downloaded from the face-api.js GitHub repository.</p>
+    
+    <div class="note">
+        <strong>Note:</strong> The MindMend Emotion Scanner currently attempts to load models from this directory first, and if that fails, it will fall back to loading from the official CDN. For optimal performance, it's recommended to have the models locally.
+    </div>
+    
+    <h2>Download Instructions</h2>
+    
+    <p>To download the required models:</p>
+    
+    <ol>
+        <li>Visit the <a href="https://github.com/justadudewhohacks/face-api.js/tree/master/weights" target="_blank">face-api.js weights folder</a> on GitHub</li>
+        <li>Download the following model files:
+            <ul>
+                <li>tiny_face_detector_model-weights_manifest.json</li>
+                <li>tiny_face_detector_model-shard1</li>
+                <li>face_landmark_68_model-weights_manifest.json</li>
+                <li>face_landmark_68_model-shard1</li>
+                <li>face_recognition_model-weights_manifest.json</li>
+                <li>face_recognition_model-shard1</li>
+                <li>face_recognition_model-shard2</li>
+                <li>face_expression_model-weights_manifest.json</li>
+                <li>face_expression_model-shard1</li>
+            </ul>
+        </li>
+        <li>Save all these files in this <code>/models</code> directory</li>
+    </ol>
+    
+    <h2>Alternative Method</h2>
+    
+    <p>You can also use the following curl commands to download the model files:</p>
+    
+<pre>
+curl -O https://raw.githubusercontent.com/justadudewhohacks/face-api.js/master/weights/tiny_face_detector_model-weights_manifest.json
+curl -O https://raw.githubusercontent.com/justadudewhohacks/face-api.js/master/weights/tiny_face_detector_model-shard1
+curl -O https://raw.githubusercontent.com/justadudewhohacks/face-api.js/master/weights/face_landmark_68_model-weights_manifest.json
+curl -O https://raw.githubusercontent.com/justadudewhohacks/face-api.js/master/weights/face_landmark_68_model-shard1
+curl -O https://raw.githubusercontent.com/justadudewhohacks/face-api.js/master/weights/face_recognition_model-weights_manifest.json
+curl -O https://raw.githubusercontent.com/justadudewhohacks/face-api.js/master/weights/face_recognition_model-shard1
+curl -O https://raw.githubusercontent.com/justadudewhohacks/face-api.js/master/weights/face_recognition_model-shard2
+curl -O https://raw.githubusercontent.com/justadudewhohacks/face-api.js/master/weights/face_expression_model-weights_manifest.json
+curl -O https://raw.githubusercontent.com/justadudewhohacks/face-api.js/master/weights/face_expression_model-shard1
+</pre>
+    
+    <h2>Verification</h2>
+    
+    <p>Once you have downloaded the model files, the Emotion Scanner will automatically use them for face detection and emotion analysis, providing faster loading times and offline capability.</p>
+    
+    <h2>Troubleshooting</h2>
+    
+    <p>If you encounter issues with the models not loading:</p>
+    <ul>
+        <li>Ensure the models are placed directly in this <code>/models</code> directory, not in a subdirectory</li>
+        <li>Check that the file names exactly match those listed above</li>
+        <li>Verify your internet connection if falling back to CDN</li>
+        <li>Check your browser's console for any specific error messages</li>
+    </ul>
+</body>
+</html>

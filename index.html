@@ -63,6 +63,7 @@
             margin-bottom: 20px;
             background: linear-gradient(120deg, #ffffff, #e0e0e0);
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
             text-shadow: 2px 2px 10px rgba(0,0,0,0.2);
         }
@@ -341,6 +342,14 @@
             <p class="feature-description">Fun interactive games to boost your mood</p>
             <a href="stress_booster_game.html" class="action-button">Play Now</a>
         </div>
+
+        <div class="feature-card" data-aos="fade-up" data-aos-delay="700">
+            <div class="gamification-badge">+25 pts/scan</div>
+            <div class="feature-icon">📷</div>
+            <h3 class="feature-title">Emotion Scanner</h3>
+            <p class="feature-description">AI-powered facial expression analysis for mood detection</p>
+            <button id="emotion-scanner-btn" class="action-button">Scan Now</button>
+        </div>
     </div>
 
     <div class="rewards-panel">
@@ -359,6 +368,10 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.13.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/blazeface@0.0.7"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/face-landmarks-detection@0.0.3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/deepface-js@0.0.4/dist/deepface.min.js"></script>
     <script>
         // Initialize AOS
         AOS.init({
@@ -462,6 +475,520 @@
                 });
             });
         });
+        
+        // Emotion Scanner Functionality
+        const emotionScannerBtn = document.getElementById('emotion-scanner-btn');
+        if (emotionScannerBtn) {
+            emotionScannerBtn.addEventListener('click', openEmotionScanner);
+        }
+        
+        function openEmotionScanner() {
+            // Create modal for emotion scanner
+            const modal = document.createElement('div');
+            modal.className = 'emotion-modal';
+            modal.innerHTML = `
+                <div class="emotion-scanner-content">
+                    <div class="scanner-header">
+                        <h3>MindMend Emotion Scanner</h3>
+                        <button class="close-button">&times;</button>
+                    </div>
+                    <div class="scanner-body">
+                        <p>Our AI can analyze your facial expressions to detect your current emotional state.</p>
+                        <div class="video-container">
+                            <video id="emotion-video" playsinline autoplay></video>
+                            <canvas id="emotion-canvas" style="display:none;"></canvas>
+                            <div class="scanning-overlay">
+                                <div class="scan-animation"></div>
+                            </div>
+                        </div>
+                        <div class="emotion-result">
+                            <div class="emotion-status">Ready to scan</div>
+                            <div class="emotion-recommendation" style="display:none;"></div>
+                        </div>
+                        <button class="start-scan-button">Start Scan</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Add styles for the modal
+            const style = document.createElement('style');
+            style.textContent = `
+                .emotion-modal {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.8);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 9999;
+                }
+                
+                .emotion-scanner-content {
+                    background: white;
+                    width: 90%;
+                    max-width: 600px;
+                    border-radius: 20px;
+                    overflow: hidden;
+                    color: var(--text-dark);
+                    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+                }
+                
+                .scanner-header {
+                    background: var(--primary-color);
+                    color: white;
+                    padding: 1.5rem;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+                
+                .scanner-header h3 {
+                    margin: 0;
+                    font-size: 1.5rem;
+                }
+                
+                .close-button {
+                    background: none;
+                    border: none;
+                    color: white;
+                    font-size: 1.8rem;
+                    cursor: pointer;
+                    line-height: 1;
+                }
+                
+                .scanner-body {
+                    padding: 1.5rem;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 1.5rem;
+                }
+                
+                .video-container {
+                    position: relative;
+                    width: 100%;
+                    height: 350px;
+                    background: #f0f0f0;
+                    overflow: hidden;
+                    border-radius: 12px;
+                }
+                
+                #emotion-video {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                }
+                
+                .scanning-overlay {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    display: none;
+                    pointer-events: none;
+                }
+                
+                .scan-animation {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 5px;
+                    background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
+                    animation: scan-line 2s linear infinite;
+                }
+                
+                @keyframes scan-line {
+                    0% { top: 0; }
+                    100% { top: 100%; }
+                }
+                
+                .emotion-result {
+                    padding: 1.5rem;
+                    border-radius: 12px;
+                    background: #f8f8f8;
+                    text-align: center;
+                }
+                
+                .emotion-status {
+                    font-weight: 500;
+                    font-size: 1.1rem;
+                    color: var(--text-dark);
+                }
+                
+                .emotion-recommendation {
+                    margin-top: 1rem;
+                    padding: 1rem;
+                    background: rgba(0, 86, 179, 0.1);
+                    border-left: 4px solid var(--accent-color);
+                    border-radius: 4px;
+                    text-align: left;
+                }
+                
+                .start-scan-button {
+                    background: var(--accent-color);
+                    color: white;
+                    border: none;
+                    padding: 1rem 2rem;
+                    border-radius: 30px;
+                    font-size: 1rem;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    align-self: center;
+                }
+                
+                .start-scan-button:hover {
+                    background: var(--primary-color);
+                    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+                    transform: translateY(-2px);
+                }
+                
+                .emotion-badge {
+                    display: inline-block;
+                    padding: 0.5rem 1rem;
+                    border-radius: 20px;
+                    font-weight: 600;
+                    margin-top: 1rem;
+                }
+                
+                .emotion-happy {
+                    background: #c8e6c9;
+                    color: #2e7d32;
+                }
+                
+                .emotion-sad {
+                    background: #bbdefb;
+                    color: #1565c0;
+                }
+                
+                .emotion-angry {
+                    background: #ffcdd2;
+                    color: #c62828;
+                }
+                
+                .emotion-neutral {
+                    background: #f5f5f5;
+                    color: #616161;
+                }
+                
+                .emotion-surprised {
+                    background: #fff9c4;
+                    color: #f57f17;
+                }
+            `;
+            
+            document.head.appendChild(style);
+            
+            // Handle close button
+            const closeButton = modal.querySelector('.close-button');
+            closeButton.addEventListener('click', () => {
+                stopCamera();
+                modal.remove();
+                style.remove();
+            });
+            
+            const video = document.getElementById('emotion-video');
+            const emotionStatus = modal.querySelector('.emotion-status');
+            const startScanButton = modal.querySelector('.start-scan-button');
+            const emotionRecommendation = modal.querySelector('.emotion-recommendation');
+            const scanningOverlay = modal.querySelector('.scanning-overlay');
+            let stream = null;
+            
+            // Start camera when the button is clicked
+            startScanButton.addEventListener('click', async () => {
+                try {
+                    if (startScanButton.textContent === 'Start Scan') {
+                        // Load AI models first
+                        const modelsLoaded = await loadModels();
+                        if (!modelsLoaded) {
+                            return; // Stop if models couldn't be loaded
+                        }
+                        
+                        emotionStatus.textContent = 'Accessing camera...';
+                        stream = await navigator.mediaDevices.getUserMedia({ 
+                            video: { facingMode: 'user' } 
+                        });
+                        
+                        video.srcObject = stream;
+                        startScanButton.textContent = 'Scanning...';
+                        startScanButton.disabled = true;
+                        
+                        // Show scanning animation
+                        scanningOverlay.style.display = 'block';
+                        
+                        // Start face detection after video is loaded
+                        video.onloadedmetadata = function() {
+                            setTimeout(() => {
+                                detectEmotion();
+                            }, 2000);
+                        };
+                    } else if (startScanButton.textContent === 'Scan Again') {
+                        // Reset for another scan
+                        emotionRecommendation.style.display = 'none';
+                        scanningOverlay.style.display = 'block';
+                        startScanButton.disabled = true;
+                        startScanButton.textContent = 'Scanning...';
+                        
+                        // Start detection again
+                        setTimeout(() => {
+                            detectEmotion();
+                        }, 1000);
+                    } else {
+                        // Close modal and add points
+                        updatePoints(25); // Add points for completing a scan
+                        stopCamera();
+                        modal.remove();
+                        style.remove();
+                    }
+                } catch (err) {
+                    emotionStatus.textContent = 'Camera access denied. Please allow access to use this feature.';
+                    console.error('Error accessing camera:', err);
+                    startScanButton.disabled = false;
+                    startScanButton.textContent = 'Start Scan';
+                }
+            });
+            
+            function stopCamera() {
+                if (stream) {
+                    stream.getTracks().forEach(track => track.stop());
+                    stream = null;
+                }
+                scanningOverlay.style.display = 'none';
+            }
+            
+            // Load advanced face detection models with DeepFace and BlazeFace
+            async function loadModels() {
+                try {
+                    emotionStatus.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading AI models...';
+                    
+                    // Load BlazeFace model (lightweight face detector)
+                    window.blazeFaceModel = await blazeface.load();
+                    
+                    // Load facial landmark model for more detailed analysis
+                    window.faceLandmarkModel = await facemesh.load({
+                        maxFaces: 1 // We only need to analyze one face at a time
+                    });
+                    
+                    // DeepFace will load its models on-demand
+                    
+                    emotionStatus.innerHTML = 'Advanced AI models loaded successfully!';
+                    return true;
+                } catch (error) {
+                    console.error('Error loading advanced detection models:', error);
+                    emotionStatus.innerHTML = 'Error loading AI models. Please try again later.';
+                    return false;
+                }
+            }
+            
+            // This section has been replaced by the enhanceEmotionDetection function
+            // which provides more nuanced emotion detection with DeepFace
+            
+            // Advanced emotion detection using DeepFace and BlazeFace
+            async function detectEmotion() {
+                const video = document.getElementById('emotion-video');
+                
+                try {
+                    // Display processing message
+                    emotionStatus.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing facial expression...';
+                    
+                    // Check if models are loaded, if not load them
+                    if (!window.blazeFaceModel) {
+                        await loadModels();
+                    }
+                    
+                    // Create a canvas to capture the current frame from video
+                    const canvas = document.createElement('canvas');
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                    
+                    // Hide scanning overlay
+                    scanningOverlay.style.display = 'none';
+                    
+                    // First, detect face using BlazeFace (faster detection)
+                    const blazeFaceDetections = await window.blazeFaceModel.estimateFaces(video, false);
+                    
+                    if (blazeFaceDetections && blazeFaceDetections.length > 0) {
+                        // Get face rectangle for DeepFace
+                        const faceBox = {
+                            x: Math.round(blazeFaceDetections[0].topLeft[0]),
+                            y: Math.round(blazeFaceDetections[0].topLeft[1]),
+                            width: Math.round(blazeFaceDetections[0].bottomRight[0] - blazeFaceDetections[0].topLeft[0]),
+                            height: Math.round(blazeFaceDetections[0].bottomRight[1] - blazeFaceDetections[0].topLeft[1])
+                        };
+                        
+                        // Get landmarks for more accurate analysis (optional)
+                        const faceLandmarks = await window.faceLandmarkModel.estimateFaces({
+                            input: video
+                        });
+                        
+                        // Process with DeepFace for emotion detection
+                        const deepFaceResult = await deepface.analyze(canvas.toDataURL(), {
+                            actions: ['emotion']
+                        });
+                        
+                        // Extract emotion data
+                        const emotions = deepFaceResult.emotion;
+                        
+                        // Find the dominant emotion
+                        let dominantEmotion = '';
+                        let highestScore = 0;
+                        
+                        for (const [emotion, score] of Object.entries(emotions)) {
+                            if (score > highestScore) {
+                                highestScore = score;
+                                dominantEmotion = emotion;
+                            }
+                        }
+                        
+                        // Enhanced emotion mapping with DeepFace's more accurate analysis
+                        let detectedEmotion = dominantEmotion.charAt(0).toUpperCase() + dominantEmotion.slice(1);
+                        const confidencePercent = Math.round(highestScore * 100);
+                        
+                        // Enhance detection by considering intensity ratios
+                        const enhancedEmotion = enhanceEmotionDetection(emotions);
+                        if (enhancedEmotion) {
+                            detectedEmotion = enhancedEmotion;
+                        }
+                        
+                        // Determine emotion class for styling
+                        let emotionClass = 'emotion-' + dominantEmotion.toLowerCase();
+                        if (!['happy', 'sad', 'angry', 'neutral', 'surprise', 'disgust', 'fear'].includes(dominantEmotion.toLowerCase())) {
+                            emotionClass = 'emotion-neutral'; // Default for emotions without specific styling
+                        }
+                        
+                        // Update status with detailed emotion analysis
+                        emotionStatus.innerHTML = `
+                            <div>Advanced Scan Complete!</div>
+                            <div class="emotion-badge ${emotionClass}">
+                                ${detectedEmotion} <small>(${confidencePercent}% confidence)</small>
+                            </div>
+                            <div style="font-size: 0.8em; margin-top: 5px; display: flex; justify-content: space-around;">
+                                <span style="color: #4caf50;">Happy: ${Math.round(emotions.happy)}%</span>
+                                <span style="color: #2196f3;">Sad: ${Math.round(emotions.sad)}%</span>
+                                <span style="color: #f44336;">Angry: ${Math.round(emotions.angry)}%</span>
+                            </div>
+                        `;
+                        
+                        // Show recommendations based on emotion
+                        emotionRecommendation.style.display = 'block';
+                        
+                        let recommendation = '';
+                        switch(detectedEmotion.toLowerCase()) {
+                            case 'happy':
+                            case 'very happy':
+                                recommendation = "It's great to see you're feeling happy! This is an ideal time to engage with our community features or challenge yourself with new wellness activities.";
+                                break;
+                            case 'sad':
+                            case 'very sad':
+                                recommendation = "We notice you might be feeling down. Our support groups and mood-lifting resources are designed to help. Would you like to explore guided meditation or connect with a counselor?";
+                                break;
+                            case 'anxious':
+                            case 'fear':
+                                recommendation = "You appear to be experiencing some anxiety. Try our evidence-based breathing exercises in the Mindfulness Zone or chat with our AI assistant for immediate support.";
+                                break;
+                            case 'angry':
+                            case 'very angry':
+                                recommendation = "We detect signs of frustration. Our Stress Booster Games and Yoga Practice sections offer activities specifically designed to help manage these feelings.";
+                                break;
+                            case 'surprise':
+                            case 'surprised':
+                                recommendation = "You seem surprised! If you're feeling overwhelmed, our Resource Hub has expert information on managing unexpected emotions and situations effectively.";
+                                break;
+                            case 'disgust':
+                            case 'disgusted':
+                                recommendation = "You appear to be experiencing aversion. We have specialized mindfulness resources that can help you process these feelings in a constructive way.";
+                                break;
+                            case 'neutral':
+                            case 'calm':
+                                recommendation = "Your emotional state appears balanced. This is an excellent opportunity to explore new wellness practices or deepen existing ones.";
+                                break;
+                            case 'frustrated':
+                                recommendation = "We detect signs of frustration - a mix of sadness and anger. Our conflict resolution resources and stress management exercises might be particularly helpful right now.";
+                                break;
+                            case 'excited':
+                                recommendation = "You're showing signs of excitement! Channel this positive energy into our challenge activities or creative expression exercises.";
+                                break;
+                            case 'contempt':
+                                recommendation = "Your expression suggests complex emotions. Our advanced reflection exercises and journaling prompts can help you explore these feelings more deeply.";
+                                break;
+                            default:
+                                recommendation = "Thank you for using our advanced emotion scanner. Based on your current emotional state, we recommend exploring the features that resonate most with you right now.";
+                        }
+                        
+                        emotionRecommendation.textContent = recommendation;
+                        
+                        // Store detailed emotion in session storage for personalized experience
+                        sessionStorage.setItem('userEmotion', detectedEmotion.toLowerCase());
+                        sessionStorage.setItem('emotionData', JSON.stringify(emotions));
+                        
+                        // Award extra points for using advanced emotion detection
+                        updatePoints(35); // Increased from 25 for using the advanced feature
+                    } else {
+                        // No face detected
+                        emotionStatus.innerHTML = '<strong>No face detected</strong>. Please ensure your face is clearly visible to the camera and well-lit.';
+                        emotionRecommendation.style.display = 'none';
+                        updatePoints(5); // Still give a few points for trying
+                    }
+                } catch (error) {
+                    console.error('Error during emotion detection:', error);
+                    emotionStatus.innerHTML = '<strong>Error during detection</strong>. Please try again or check your camera settings.';
+                    emotionRecommendation.style.display = 'none';
+                }
+                
+                // Update button
+                startScanButton.disabled = false;
+                startScanButton.textContent = 'Scan Again';
+            }
+            
+            // Enhanced emotion detection function that considers multiple emotional signals
+            function enhanceEmotionDetection(emotions) {
+                // Refine emotion detection with specialized heuristics
+                
+                // Check for mixed emotional states
+                if (emotions.happy > 30 && emotions.surprise > 30) {
+                    return "Excited"; // Happy + Surprise = Excitement
+                }
+                
+                if (emotions.sad > 30 && emotions.angry > 30) {
+                    return "Frustrated"; // Sad + Angry = Frustration
+                }
+                
+                if (emotions.angry > 50 && emotions.disgust > 20) {
+                    return "Contempt"; // Strong anger + disgust can indicate contempt
+                }
+                
+                if (emotions.sad > 40 && emotions.fear > 25) {
+                    return "Anxious"; // Sadness + fear often indicates anxiety
+                }
+                
+                if (emotions.neutral > 80) {
+                    return "Calm"; // Very high neutral can be interpreted as calmness
+                }
+                
+                if (emotions.happy > 60) {
+                    return "Very Happy"; // Emphasize high happiness
+                }
+                
+                if (emotions.sad > 60) {
+                    return "Very Sad"; // Emphasize high sadness
+                }
+                
+                if (emotions.angry > 60) {
+                    return "Very Angry"; // Emphasize high anger
+                }
+                
+                // If no special case detected, return null to use the default emotion
+                return null;
+            }
+        }
     </script>
 </body>
 </html>
